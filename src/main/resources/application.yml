@@ -1,0 +1,18 @@
+spring:
+  config:
+    import:
+      - classpath:config/application-db.properties
+  datasource:
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    driver-class-name: ${spring.datasource.driver-class-name}
+  jpa:
+    properties:
+      hibernate:
+        format_sql: ${spring.jpa.properties.hibernate.format_sql}
+        show_sql: ${spring.jpa.properties.hibernate.show_sql}
+    hibernate:
+      ddl-auto: ${spring.jpa.hibernate.ddl-auto}
+    database-platform: ${spring.jpa.database-platform}
+    open-in-view: ${spring.jpa.open-in-view}
