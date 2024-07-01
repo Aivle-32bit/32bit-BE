@@ -119,3 +119,6 @@ gradle-app.setting
 
 ### MAC-OS template
 *.DS_Store
+
+### binary ###
+/bin/
