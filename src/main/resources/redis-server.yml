@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  signup-redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: 32bit-signup-redis
+    hostname: redis_boot
+    labels:
+      - "name=signup-redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379

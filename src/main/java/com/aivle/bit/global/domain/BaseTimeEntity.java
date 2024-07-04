@@ -1,4 +1,4 @@
-package com.aivle.bit.global;
+package com.aivle.bit.global.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
