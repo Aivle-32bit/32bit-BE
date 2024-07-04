@@ -3,6 +3,7 @@ spring:
     include:
       - mail
       - datasource
+      - secret
   jpa:
     hibernate:
       ddl-auto: create
