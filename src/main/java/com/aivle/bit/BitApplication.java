@@ -1,11 +1,18 @@
 package com.aivle.bit;
 
+import com.aivle.bit.discord.DiscordProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 
-@SpringBootApplication
+@EnableAsync(proxyTargetClass = true)
+@EnableConfigurationProperties(value = {
+	DiscordProperties.class
+})
 @EnableJpaAuditing
+@SpringBootApplication
 public class BitApplication {
 
 	public static void main(String[] args) {
