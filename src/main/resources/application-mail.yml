@@ -1,0 +1,8 @@
+spring:
+  config:
+    import:
+      - classpath:config/application-mail.properties
+ses:
+  credentials:
+    access-key: ${ses.credentials.access-key}
+    secret-key: ${ses.credentials.secret-key}
