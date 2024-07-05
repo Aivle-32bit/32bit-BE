@@ -6,9 +6,7 @@ import lombok.Getter;
 public enum MemberState {
     UNVERIFIED(0),
     VERIFIED(1),
-    ADMIN_VERIFIED(2),
-    USER_DORMANT(3),
-    ADMIN_DORMANT(4);
+    USER_DORMANT(2);
 
     private final int code;
 
