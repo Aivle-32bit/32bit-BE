@@ -7,6 +7,7 @@ public record ErrorResponse(
     String errorName,
     String message
 ) {
+
     public static ErrorResponse from(ErrorCode errorCode) {
         return new ErrorResponse(
             errorCode.getHttpStatus(),

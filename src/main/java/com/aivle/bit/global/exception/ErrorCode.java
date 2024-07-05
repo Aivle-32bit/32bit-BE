@@ -1,6 +1,7 @@
 package com.aivle.bit.global.exception;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,15 @@ public enum ErrorCode {
     EXPIRED_VERIFICATION_CODE(BAD_REQUEST, "인증 코드가 만료되었습니다."),
     INVALID_EMAIL_FORMAT(BAD_REQUEST, "이메일 형식이 올바르지 않습니다."),
     INVALID_PASSWORD_FORMAT(BAD_REQUEST, "비밀번호 형식이 올바르지 않습니다."),
+    AUTH_INVALID_PASSWORD(BAD_REQUEST, "유효하지 않은 비밀번호입니다."),
     INVALID_NAME_FORMAT(BAD_REQUEST, "이름 형식이 올바르지 않습니다."),
     EMAIL_DUPLICATION(BAD_REQUEST, "이미 사용 중인 이메일입니다."),
+    INVALID_TOKEN_EXTRACTOR(BAD_REQUEST, "토큰 추출에 실패했습니다."),
+    EXPIRED_TOKEN(BAD_REQUEST, "토큰이 만료되었습니다"),
+    PAYLOAD_EMAIL_MISSING(BAD_REQUEST, "페이로드에 이메일이 없습니다."),
+    NO_SEARCH_MEMBER(BAD_REQUEST, "유저를 찾을 수 없습니다."),
+    INVALID_JWT_TOKEN(BAD_REQUEST, "JWT 유효성 검증에 실패하였습니다."),
+
     // 404 Not Found
     NOT_SUPPORT_API(BAD_REQUEST, "지원하지 않는 API입니다."),
 

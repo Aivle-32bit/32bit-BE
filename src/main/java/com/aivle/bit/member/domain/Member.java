@@ -63,11 +63,11 @@ public class Member extends BaseTimeEntity {
     }
 
     public static Member of(final String email, final String password, final String name, final String address) {
-        validate(email, password, name, address);
+        validate(email, password, name);
         return new Member(email, password, name, address, MemberState.UNVERIFIED, false, null);
     }
 
-    private static void validate(final String email, final String password, final String name, final String address) {
+    private static void validate(final String email, final String password, final String name) {
         if (!isValidEmail(email)) {
             throw new AivleException(INVALID_EMAIL_FORMAT);
         }
@@ -91,5 +91,11 @@ public class Member extends BaseTimeEntity {
 
     private static boolean isValidName(final String name) {
         return Pattern.matches(NAME_REGEX, name);
+    }
+
+    public void validatePassword(final String password) {
+        if (!this.password.equals(encode(password))) {
+            throw new AivleException(AUTH_INVALID_PASSWORD);
+        }
     }
 }
