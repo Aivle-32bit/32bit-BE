@@ -37,7 +37,7 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    @Comment("0-미인증, 1-일반 회원 인증, 2-관리자 인증, 3-일반 회원 휴먼, 4-관리자 휴먼")
+    @Comment("0-미인증, 1-회원 인증, 2-회원 휴면")
     private MemberState state;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
