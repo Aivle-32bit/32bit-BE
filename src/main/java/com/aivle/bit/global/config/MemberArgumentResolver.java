@@ -1,12 +1,15 @@
 package com.aivle.bit.global.config;
 
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_TOKEN_EXTRACTOR;
+import static com.aivle.bit.global.exception.ErrorCode.NOT_AUTHORIZED;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_MEMBER;
+import static com.aivle.bit.global.exception.ErrorCode.USER_DORMANT;
 
 import com.aivle.bit.auth.jwt.JwtLogin;
 import com.aivle.bit.auth.jwt.JwtTokenProvider;
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.member.domain.Member;
+import com.aivle.bit.member.domain.MemberState;
 import com.aivle.bit.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,8 +28,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private static final String AUTH_COOKIE_NAME = HttpHeaders.AUTHORIZATION;
 
+    private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
     @Override
@@ -37,15 +41,34 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        final String jwtToken = Arrays.stream(
-                Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)).getCookies())
-            .filter(cookie -> cookie.getName().equals(HttpHeaders.AUTHORIZATION))
+
+        String jwtToken = extractJwtTokenFromCookies(webRequest);
+        String email = jwtTokenProvider.extractEmailFromAccessToken(jwtToken);
+        Member member = findMemberByEmail(email);
+        validateMemberState(member);
+
+        return member;
+    }
+
+    private String extractJwtTokenFromCookies(NativeWebRequest webRequest) {
+        return Arrays.stream(Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)).getCookies())
+            .filter(cookie -> AUTH_COOKIE_NAME.equals(cookie.getName()))
             .findFirst()
             .map(Cookie::getValue)
             .orElseThrow(() -> new AivleException(INVALID_TOKEN_EXTRACTOR));
+    }
 
-        String email = jwtTokenProvider.extractEmailFromAccessToken(jwtToken);
+    private Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
             .orElseThrow(() -> new AivleException(NO_SEARCH_MEMBER));
+    }
+
+    private void validateMemberState(Member member) {
+        if (member.getState() == MemberState.UNVERIFIED) {
+            throw new AivleException(NOT_AUTHORIZED);
+        }
+        if (member.getState() == MemberState.USER_DORMANT) {
+            throw new AivleException(USER_DORMANT);
+        }
     }
 }
