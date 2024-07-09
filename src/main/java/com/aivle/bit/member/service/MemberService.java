@@ -20,14 +20,18 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final VerificationStorage verificationStorage;
 
+    @Transactional(readOnly = true)
+    public void checkEmailDuplicated(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new AivleException(EMAIL_DUPLICATION);
+        }
+    }
+
     @Transactional
     public Member signup(MemberCreateRequest memberCreateRequest) {
-        verificationStorage.isEmailVerified(memberCreateRequest.email());
+        checkEmailDuplicated(memberCreateRequest.email());
 
-        memberRepository.findByEmail(memberCreateRequest.email())
-            .ifPresent(member -> {
-                throw new AivleException(EMAIL_DUPLICATION);
-            });
+        verificationStorage.isEmailVerified(memberCreateRequest.email());
 
         Member member = Member.of(memberCreateRequest.email(), memberCreateRequest.password(),
             memberCreateRequest.name(), memberCreateRequest.address());
@@ -37,7 +41,7 @@ public class MemberService {
 
     @Transactional
     public void updatePassword(Member member, PasswordForm form) {
-        if (!form.getNewPassword().equals(form.getRetype())){
+        if (!form.getNewPassword().equals(form.getRetype())) {
             throw new AivleException(INVALID_REQUEST);
         }
         member.changePassword(form.getNewPassword(), form.getCurrentPassword());

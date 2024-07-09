@@ -56,6 +56,7 @@ public class AuthController {
     @PostMapping("/send-verification")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void sendVerification(@Valid @RequestBody final MemberVerificationRequest memberVerificationRequest) {
+        memberService.checkEmailDuplicated(memberVerificationRequest.email());
         sendVerificationEmailService.sendVerification(memberVerificationRequest.email());
     }
 
