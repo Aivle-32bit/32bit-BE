@@ -31,7 +31,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	implementation('com.amazonaws:aws-java-sdk-ses:1.12.583') {
+	implementation('com.amazonaws:aws-java-sdk-ses:1.12.757') {
 		exclude group: 'commons-logging', module: 'commons-logging'
 	}
 
@@ -40,12 +40,19 @@ dependencies {
 	implementation 'org.springframework.data:spring-data-redis'
 
 	// Feign
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.2'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.1'
 
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// s3
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.583'
+	implementation 'javax.xml.bind:jaxb-api:2.3.0'
+
+	// retry
+	implementation 'org.springframework.retry:spring-retry:1.3.1'
 }
 
 tasks.named('test') {

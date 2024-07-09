@@ -1,4 +1,4 @@
-package com.aivle.bit.global.smtp;
+package com.aivle.bit.global.config;
 
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
