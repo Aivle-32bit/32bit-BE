@@ -11,7 +11,7 @@ class HtmlEmailTemplate {
                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #ddd; padding: 20px; background-color: #ffffff; border-top: 10px solid #f76c5e; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                      <tr>
                        <td style="text-align: center; padding-bottom: 20px;">
-                         <img src="https://images-ext-1.discordapp.net/external/I3JzIXHNDSf_LJssM-xkxXsG1RMkYwRPvlTQYN1ircI/https/media.tenor.com/7JhCpDbT00YAAAPo/crycat-crying-cat.mp4" alt="재무탐정 LOGO" width="95" height="75" />
+                         <img src="https://storage.googleapis.com/32_bit/logo.png" alt="재무탐정 LOGO" width="95" height="95" />
                        </td>
                      </tr>
                      %s
