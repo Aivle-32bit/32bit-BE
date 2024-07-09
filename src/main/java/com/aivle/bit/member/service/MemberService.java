@@ -1,11 +1,13 @@
 package com.aivle.bit.member.service;
 
 import static com.aivle.bit.global.exception.ErrorCode.EMAIL_DUPLICATION;
+import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
 
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.global.smtp.VerificationStorage;
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.dto.request.MemberCreateRequest;
+import com.aivle.bit.member.dto.request.PasswordForm;
 import com.aivle.bit.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,5 +33,14 @@ public class MemberService {
             memberCreateRequest.name(), memberCreateRequest.address());
 
         return memberRepository.save(member);
+    }
+
+    @Transactional
+    public void updatePassword(Member member, PasswordForm form) {
+        if (!form.getNewPassword().equals(form.getRetype())){
+            throw new AivleException(INVALID_REQUEST);
+        }
+        member.changePassword(form.getNewPassword(), form.getCurrentPassword());
+        memberRepository.save(member);
     }
 }

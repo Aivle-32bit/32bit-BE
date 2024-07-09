@@ -98,4 +98,18 @@ public class Member extends BaseTimeEntity {
             throw new AivleException(AUTH_INVALID_PASSWORD);
         }
     }
+
+    public void changePassword(String newPassword, String encodedOldPassword) {
+        if (this.password.equals(encode(newPassword))) {
+            throw new AivleException(DUPLICATE_PASSWORD);
+        }
+
+        if (!isValidPassword(newPassword)) {
+            throw new AivleException(INVALID_PASSWORD_FORMAT);
+        }
+
+        System.out.println("newPassword = " + newPassword);
+        System.out.println("encodedOldPassword = " + encodedOldPassword);
+        this.password = encode(newPassword);
+    }
 }
