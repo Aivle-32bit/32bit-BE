@@ -17,11 +17,13 @@ public class InterceptorAuthConfig implements WebMvcConfigurer {
     private final MemberArgumentResolver memberArgumentResolver;
     private final AdminInterceptor adminInterceptor;
     private final AdminArgumentResolver adminArgumentResolver;
+    private final AllowUnverifiedUserArgumentResolver allowUnverifiedUserArgumentResolver;
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(memberArgumentResolver);
         resolvers.add(adminArgumentResolver);
+        resolvers.add(allowUnverifiedUserArgumentResolver);
     }
 
     @Override

@@ -29,6 +29,10 @@ public enum ErrorCode {
     NO_SEARCH_MEMBER(BAD_REQUEST, "유저를 찾을 수 없습니다."),
     INVALID_JWT_TOKEN(BAD_REQUEST, "JWT 유효성 검증에 실패하였습니다."),
     DUPLICATE_PASSWORD(BAD_REQUEST, "중복된 비밀번호 요청입니다."),
+    INVALID_FILE_FORMAT(BAD_REQUEST, "지원하지 않는 파일 형식입니다."),
+    FILE_SIZE_EXCEEDED(BAD_REQUEST, "파일 크기는 5MB를 초과할 수 없습니다."),
+    INVALID_BUSINESS_REGISTRATION_NUMBER_FORMAT(BAD_REQUEST, "사업자 등록 번호 형식이 올바르지 않습니다."),
+    INVALID_PHONE_NUMBER_FORMAT(BAD_REQUEST, "전화번호 형식이 올바르지 않습니다."),
 
     // 401 Unauthorized
     INVALID_TOKEN_EXTRACTOR(UNAUTHORIZED, "토큰 추출에 실패했습니다."),
@@ -41,7 +45,9 @@ public enum ErrorCode {
 
     // 500 Internal Server Error
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버에 문제가 발생했습니다."),
-    PASSWORD_ENCRYPTION_ERROR(INTERNAL_SERVER_ERROR, "암호화에 문제가 발생했습니다. 관리자에게 문의하세요.");
+    PASSWORD_ENCRYPTION_ERROR(INTERNAL_SERVER_ERROR, "암호화에 문제가 발생했습니다. 관리자에게 문의하세요."),
+    SHA256AlgorithmNotFoundException(INTERNAL_SERVER_ERROR, "SHA-256 알고리즘을 찾을 수 없습니다."),
+    FILE_UPLOAD_ERROR(INTERNAL_SERVER_ERROR, "파일 업로드 중 오류가 발생했습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 }

@@ -4,6 +4,7 @@ spring:
       - mail
       - datasource
       - secret
+      - s3
   jpa:
     hibernate:
       ddl-auto: update
