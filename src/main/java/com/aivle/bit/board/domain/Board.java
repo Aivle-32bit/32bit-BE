@@ -1,20 +1,20 @@
 package com.aivle.bit.board.domain;
 
-import static ch.qos.logback.classic.spi.ThrowableProxyVO.build;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Builder
+@NoArgsConstructor
 public class Board {
 
     @Id
@@ -23,18 +23,16 @@ public class Board {
     private String title;
     private String content;
     private Long memberId;
-    private int state;   //삭제 여부
+    private int state;   // 삭제 여부
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean secret;  //비밀글
-    private String boardpw;  //비밀글 pw
+
+    @OneToOne
+    private BoardDetails boardDetails;
 
     @Builder
-    private Board(Long id, String title, String content, Long memberId, int state,
-                  LocalDateTime createdAt,
-                  LocalDateTime updatedAt,
-                  boolean secret, String boardpw) {
-
+    public Board(Long id, String title, String content, Long memberId, int state,
+                 LocalDateTime createdAt, LocalDateTime updatedAt, BoardDetails boardDetails) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -42,8 +40,7 @@ public class Board {
         this.state = state;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.secret = secret;
-        this.boardpw = boardpw;
+        this.boardDetails = boardDetails;
     }
 
     public static Board of(String title, String content, Long memberId) {
@@ -54,8 +51,7 @@ public class Board {
             .state(0)
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now())
-            .secret(false)
-            .boardpw(null)
+            .boardDetails(BoardDetails.builder().secret(false).boardpw(null).build())
             .build();
     }
 }

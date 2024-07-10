@@ -5,6 +5,7 @@ import static com.aivle.bit.global.exception.ErrorCode.PASSWORD_REQUIRED_FOR_SEC
 import static com.aivle.bit.global.exception.ErrorCode.TITLE_REQUIRED;
 
 import com.aivle.bit.board.domain.Board;
+import com.aivle.bit.board.domain.BoardDetails;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
 import com.aivle.bit.board.repository.BoardRepository;
 import com.aivle.bit.global.exception.AivleException;
@@ -31,21 +32,24 @@ public class BoardService {
         if (boardCreateRequest.isSecret() && (boardCreateRequest.getBoardpw() == null || boardCreateRequest.getBoardpw().isEmpty())) {
             throw new AivleException(PASSWORD_REQUIRED_FOR_SECRET_POST);
         }
+
+        // BoardDetails 객체 생성
+        BoardDetails boardDetails = BoardDetails.builder()
+            .secret(boardCreateRequest.isSecret())
+            .boardpw(boardCreateRequest.getBoardpw())
+            .build();
+
         // 빌더 패턴을 사용하여 Board 객체 생성
-        Board.BoardBuilder boardBuilder = Board.builder()
+        Board board = Board.builder()
             .title(boardCreateRequest.getTitle())
             .content(boardCreateRequest.getContent())
             .memberId(member.getId())
             .state(0)
             .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now());
+            .updatedAt(LocalDateTime.now())
+            .boardDetails(boardDetails)
+            .build();
 
-        if (boardCreateRequest.isSecret()) {
-            boardBuilder.secret(true)
-                .boardpw(boardCreateRequest.getBoardpw());
-        }
-
-        Board board = boardBuilder.build();
         return boardRepository.save(board);
     }
 }
