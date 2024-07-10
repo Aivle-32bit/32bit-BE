@@ -33,6 +33,9 @@ public enum ErrorCode {
     FILE_SIZE_EXCEEDED(BAD_REQUEST, "파일 크기는 5MB를 초과할 수 없습니다."),
     INVALID_BUSINESS_REGISTRATION_NUMBER_FORMAT(BAD_REQUEST, "사업자 등록 번호 형식이 올바르지 않습니다."),
     INVALID_PHONE_NUMBER_FORMAT(BAD_REQUEST, "전화번호 형식이 올바르지 않습니다."),
+    TITLE_REQUIRED(BAD_REQUEST, "제목을 입력하세요."),
+    CONTENT_REQUIRED(BAD_REQUEST, "내용을 입력하세요."),
+    PASSWORD_REQUIRED_FOR_SECRET_POST(BAD_REQUEST, "비밀글의 경우 비밀번호를 입력하세요."),
 
     // 401 Unauthorized
     INVALID_TOKEN_EXTRACTOR(UNAUTHORIZED, "토큰 추출에 실패했습니다."),
