@@ -2,6 +2,7 @@ package com.aivle.bit.member.repository;
 
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.domain.MemberState;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByIsAdminFalseAndStateAndIsDeletedFalse(MemberState state);
 
     Optional<Member> findByIdAndIsDeletedFalse(Long id);
+
+    long countByCreatedAtAfter(LocalDateTime createdAt);
 }

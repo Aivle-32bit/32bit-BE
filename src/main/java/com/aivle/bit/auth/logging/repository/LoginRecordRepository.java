@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoginRecordRepository extends JpaRepository<LoginRecord, Long> {
 
+    long countBySuccess(boolean b);
 }
