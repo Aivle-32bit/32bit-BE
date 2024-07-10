@@ -1,25 +1,12 @@
 package com.aivle.bit.member.domain;
 
 import static com.aivle.bit.global.encode.PasswordEncoderSHA256.encode;
-import static com.aivle.bit.global.exception.ErrorCode.AUTH_INVALID_PASSWORD;
-import static com.aivle.bit.global.exception.ErrorCode.DUPLICATE_PASSWORD;
-import static com.aivle.bit.global.exception.ErrorCode.INVALID_EMAIL_FORMAT;
-import static com.aivle.bit.global.exception.ErrorCode.INVALID_NAME_FORMAT;
-import static com.aivle.bit.global.exception.ErrorCode.INVALID_PASSWORD_FORMAT;
+import static com.aivle.bit.global.exception.ErrorCode.*;
 
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
@@ -112,7 +99,7 @@ public class Member extends BaseTimeEntity {
         }
     }
 
-    public void changePassword(String newPassword) {
+    public void changePassword(String newPassword, String encodedOldPassword) {
         if (this.password.equals(encode(newPassword))) {
             throw new AivleException(DUPLICATE_PASSWORD);
         }
@@ -121,6 +108,8 @@ public class Member extends BaseTimeEntity {
             throw new AivleException(INVALID_PASSWORD_FORMAT);
         }
 
+        System.out.println("newPassword = " + newPassword);
+        System.out.println("encodedOldPassword = " + encodedOldPassword);
         this.password = encode(newPassword);
     }
 }
