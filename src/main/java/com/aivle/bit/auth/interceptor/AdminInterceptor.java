@@ -33,7 +33,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         }
         final String accessToken = jwtTokenExtractor.extractAccessToken(request);
         String email = jwtTokenProvider.extractEmailFromAccessToken(accessToken);
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmailAndIsDeletedFalse(email)
             .orElseThrow(() -> new AivleException(ACCESS_DENIED));
 
         if (!member.getIsAdmin()) {

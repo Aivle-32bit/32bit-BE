@@ -2,12 +2,27 @@ package com.aivle.bit.member.domain;
 
 import static com.aivle.bit.global.encode.PasswordEncoderSHA256.encode;
 import static com.aivle.bit.global.encode.PasswordEncoderSHA256.matches;
-import static com.aivle.bit.global.exception.ErrorCode.*;
+import static com.aivle.bit.global.exception.ErrorCode.AUTH_INVALID_PASSWORD;
+import static com.aivle.bit.global.exception.ErrorCode.DUPLICATE_PASSWORD;
+import static com.aivle.bit.global.exception.ErrorCode.INVALID_EMAIL_FORMAT;
+import static com.aivle.bit.global.exception.ErrorCode.INVALID_NAME_FORMAT;
+import static com.aivle.bit.global.exception.ErrorCode.INVALID_PASSWORD_FORMAT;
+import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
+import static com.aivle.bit.global.exception.ErrorCode.MEMBER_ALREADY_DELETED;
 
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
@@ -24,7 +39,7 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 64)
+    @Column(nullable = false, length = 64)
     private String email;
 
     @Column(nullable = false, columnDefinition = "CHAR(64)")
@@ -45,6 +60,10 @@ public class Member extends BaseTimeEntity {
     @Comment("True-관리자, False-관리자 아님")
     private Boolean isAdmin;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Comment("True-삭제, False-삭제 아님")
+    private Boolean isDeleted;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
@@ -60,6 +79,7 @@ public class Member extends BaseTimeEntity {
         this.address = address;
         this.state = state;
         this.isAdmin = isAdmin;
+        this.isDeleted = false;
         this.company = company;
     }
 
@@ -114,5 +134,36 @@ public class Member extends BaseTimeEntity {
         }
 
         this.password = encode(newPassword);
+    }
+
+    public void approve() {
+        ensureNotDeleted();
+        if (this.state == MemberState.VERIFIED) {
+            throw new AivleException(INVALID_REQUEST);
+        }
+        this.state = MemberState.VERIFIED;
+    }
+
+    public void reject() {
+        ensureNotDeleted();
+        this.state = MemberState.UNVERIFIED;
+    }
+
+    public void dormant() {
+        ensureNotDeleted();
+        this.state = MemberState.USER_DORMANT;
+    }
+
+    public void delete() {
+        if (this.isDeleted) {
+            throw new AivleException(MEMBER_ALREADY_DELETED);
+        }
+        this.isDeleted = true;
+    }
+
+    private void ensureNotDeleted() {
+        if (this.isDeleted) {
+            throw new AivleException(MEMBER_ALREADY_DELETED);
+        }
     }
 }

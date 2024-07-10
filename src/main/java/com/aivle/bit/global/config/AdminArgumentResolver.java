@@ -46,7 +46,7 @@ public class AdminArgumentResolver implements HandlerMethodArgumentResolver {
             .orElseThrow(() -> new AivleException(INVALID_TOKEN_EXTRACTOR));
 
         String email = jwtTokenProvider.extractEmailFromAccessToken(jwtToken);
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmailAndIsDeletedFalse(email)
             .orElseThrow(() -> new AivleException(NO_SEARCH_MEMBER));
 
         if (!member.getIsAdmin()) {

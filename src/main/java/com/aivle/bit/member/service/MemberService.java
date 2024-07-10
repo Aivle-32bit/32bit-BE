@@ -22,7 +22,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public void checkEmailDuplicated(String email) {
-        if (memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmailAndIsDeletedFalse(email)) {
             throw new AivleException(EMAIL_DUPLICATION);
         }
     }

@@ -26,7 +26,7 @@ public class SignInService {
 
     public TokenResponse signInUser(SignInRequest signInRequest) {
         String email = signInRequest.email();
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmailAndIsDeletedFalse(email)
             .orElseThrow(() -> new AivleException(NO_SEARCH_MEMBER));
 
         member.validatePassword(signInRequest.password());
