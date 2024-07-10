@@ -40,7 +40,7 @@ public class MemberService {
         if (!form.getNewPassword().equals(form.getRetype())){
             throw new AivleException(INVALID_REQUEST);
         }
-        member.changePassword(form.getNewPassword(), form.getCurrentPassword());
+        member.changePassword(form.getNewPassword());
         memberRepository.save(member);
     }
 }
