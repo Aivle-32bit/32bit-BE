@@ -1,17 +1,21 @@
 package com.aivle.bit.admin.controller;
 
 import com.aivle.bit.admin.dto.request.RejectRequest;
+import com.aivle.bit.admin.dto.response.LoginStatisticsResponse;
 import com.aivle.bit.admin.dto.response.MemberResponse;
+import com.aivle.bit.admin.dto.response.MemberStateCountsResponse;
+import com.aivle.bit.admin.dto.response.RegistrationStatisticsResponse;
+import com.aivle.bit.admin.dto.response.VisitorStatisticsResponse;
 import com.aivle.bit.admin.service.AdminService;
-import com.aivle.bit.auth.jwt.Admin;
 import com.aivle.bit.company.dto.response.CompanyRegistrationResponse;
-import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.domain.MemberState;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     private final AdminService adminService;
-
-    @GetMapping("/dashboard")
-    public void getDashboard(@Admin Member member) {
-        // 관리자 대시보드
-    }
 
     @GetMapping("/members")
     @ResponseStatus(HttpStatus.OK)
@@ -70,5 +69,35 @@ public class AdminController {
     @DeleteMapping("/members/{id}")
     public void deleteUser(@PathVariable Long id) {
         adminService.deleteUser(id);
+    }
+
+    @GetMapping("/dashboard/member-states")
+    @ResponseStatus(HttpStatus.OK)
+    public MemberStateCountsResponse getMemberStateCounts() {
+        return adminService.getMemberStateCounts();
+    }
+
+    @GetMapping("/dashboard/login-statistics")
+    @ResponseStatus(HttpStatus.OK)
+    public LoginStatisticsResponse getLoginStatistics() {
+        return adminService.getLoginStatistics();
+    }
+
+    @GetMapping("/dashboard/registration-statistics")
+    @ResponseStatus(HttpStatus.OK)
+    public RegistrationStatisticsResponse getRegistrationStatistics() {
+        return adminService.getRegistrationStatistics();
+    }
+
+
+    @GetMapping("/dashboard/visitor-statistics")
+    @ResponseStatus(HttpStatus.OK)
+    public VisitorStatisticsResponse getVisitorStatistics(
+        @RequestParam(value = "startDate", required = false, defaultValue = "#{T(java.time.LocalDate).now().minusDays(7)}")
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam(value = "endDate", required = false, defaultValue = "#{T(java.time.LocalDate).now()}")
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        return adminService.getVisitorStatistics(startDate, endDate);
     }
 }

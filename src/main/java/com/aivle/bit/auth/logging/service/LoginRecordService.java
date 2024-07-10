@@ -15,4 +15,16 @@ public class LoginRecordService {
         LoginRecord loginRecord = LoginRecord.of(ipAddress, userAgent, userId, success);
         loginRecordRepository.save(loginRecord);
     }
+
+    public long getTotalLoginAttempts() {
+        return loginRecordRepository.count();
+    }
+
+    public long getSuccessfulLoginAttempts() {
+        return loginRecordRepository.countBySuccess(true);
+    }
+
+    public long getFailedLoginAttempts() {
+        return loginRecordRepository.countBySuccess(false);
+    }
 }
