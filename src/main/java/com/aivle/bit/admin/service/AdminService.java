@@ -118,11 +118,11 @@ public class AdminService {
             .map(Member::getState)
             .toList();
 
-        long activeCount = states.stream().filter(state -> state == MemberState.UNVERIFIED).count();
-        long dormantCount = states.stream().filter(state -> state == MemberState.VERIFIED).count();
-        long rejectedCount = states.stream().filter(state -> state == MemberState.USER_DORMANT).count();
+        long unverifiedCount = states.stream().filter(state -> state == MemberState.UNVERIFIED).count();
+        long verifiedCount = states.stream().filter(state -> state == MemberState.VERIFIED).count();
+        long dormantCount = states.stream().filter(state -> state == MemberState.USER_DORMANT).count();
 
-        return MemberStateCountsResponse.of(activeCount, dormantCount, rejectedCount);
+        return MemberStateCountsResponse.of(unverifiedCount, verifiedCount, dormantCount);
     }
 
     public LoginStatisticsResponse getLoginStatistics() {
