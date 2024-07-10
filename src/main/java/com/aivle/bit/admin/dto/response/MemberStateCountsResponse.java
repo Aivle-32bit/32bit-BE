@@ -5,17 +5,17 @@ import lombok.Getter;
 @Getter
 public class MemberStateCountsResponse {
 
-    private final long active;
+    private final long unverified;
+    private final long verified;
     private final long dormant;
-    private final long rejected;
 
-    private MemberStateCountsResponse(long active, long dormant, long rejected) {
-        this.active = active;
+    private MemberStateCountsResponse(long unverified, long verified, long dormant) {
+        this.unverified = unverified;
+        this.verified = verified;
         this.dormant = dormant;
-        this.rejected = rejected;
     }
 
-    public static MemberStateCountsResponse of(long active, long dormant, long rejected) {
-        return new MemberStateCountsResponse(active, dormant, rejected);
+    public static MemberStateCountsResponse of(long unverified, long verified, long dormant) {
+        return new MemberStateCountsResponse(unverified, verified, dormant);
     }
 }
