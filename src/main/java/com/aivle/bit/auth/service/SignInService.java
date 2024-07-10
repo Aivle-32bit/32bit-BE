@@ -31,8 +31,8 @@ public class SignInService {
 
         member.validatePassword(signInRequest.password());
 
-        String accessToken = jwtTokenProvider.generateAccessToken(email);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(email);
+        String accessToken = jwtTokenProvider.generateAccessToken(email, member.getId(), member.getState());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(email, member.getId(), member.getState());
 
         Duration expiryDuration = jwtTokenProvider.getRefreshTokenExpiryDurationFromNow();
         tokenRepository.setValues(email, refreshToken, expiryDuration);
