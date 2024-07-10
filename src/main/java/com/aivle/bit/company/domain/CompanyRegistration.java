@@ -2,6 +2,7 @@ package com.aivle.bit.company.domain;
 
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_BUSINESS_REGISTRATION_NUMBER_FORMAT;
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_PHONE_NUMBER_FORMAT;
+import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
 
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
@@ -122,5 +123,19 @@ public class CompanyRegistration extends BaseTimeEntity {
         if (!companyPhoneNumber.matches(PHONE_NUMBER_REGEX)) {
             throw new AivleException(INVALID_PHONE_NUMBER_FORMAT);
         }
+    }
+
+    public void approve() {
+        if (verificationStatus == VerificationStatus.APPROVED) {
+            throw new AivleException(INVALID_REQUEST);
+        }
+        this.verificationStatus = VerificationStatus.APPROVED;
+    }
+
+    public void reject() {
+        if (verificationStatus == VerificationStatus.REJECTED) {
+            throw new AivleException(INVALID_REQUEST);
+        }
+        this.verificationStatus = VerificationStatus.REJECTED;
     }
 }

@@ -59,7 +59,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     private Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email)
+        return memberRepository.findByEmailAndIsDeletedFalse(email)
             .orElseThrow(() -> new AivleException(NO_SEARCH_MEMBER));
     }
 

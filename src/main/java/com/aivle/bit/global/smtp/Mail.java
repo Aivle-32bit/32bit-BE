@@ -1,6 +1,9 @@
 package com.aivle.bit.global.smtp;
 
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_DORMANT;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_VERIFICATION;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_APPROVE;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_REJECT;
 
 import com.amazonaws.services.simpleemail.model.Body;
 import com.amazonaws.services.simpleemail.model.Content;
@@ -26,6 +29,24 @@ public class Mail {
         return new Mail(to,
             EMAIL_VERIFICATION.subject(),
             EMAIL_VERIFICATION.content(code));
+    }
+
+    public static Mail approve(String to, String name) {
+        return new Mail(to,
+            EMAIL_APPROVE.subject(),
+            EMAIL_APPROVE.content(name));
+    }
+
+    public static Mail reject(String to, String name, String reason) {
+        return new Mail(to,
+            EMAIL_REJECT.subject(),
+            EMAIL_REJECT.content(name, reason));
+    }
+
+    public static Mail dormant(String to, String name) {
+        return new Mail(to,
+            EMAIL_DORMANT.subject(),
+            EMAIL_DORMANT.content(name));
     }
 
     public SendEmailRequest toSes() {

@@ -10,32 +10,31 @@ import lombok.Getter;
 @Getter
 public class CompanyRegistrationResponse {
 
-    private final UUID registrationId;
-    private final String companyName;
+    private final UUID id;
+    private final String name;
+    private final String address;
     private final String representativeName;
     private final String companyRegistrationNumber;
-    private final String companyAddress;
     private final String companyPhoneNumber;
     private final String businessType;
     private final String imageUri;
-    private final VerificationStatus verificationStatus;
+    private final String verificationStatus;
     private final LocalDateTime createdDate;
     private final LocalDateTime lastModifiedDate;
 
-    private CompanyRegistrationResponse(UUID registrationId, String companyName, String representativeName,
-                                        String companyRegistrationNumber, String companyAddress,
-                                        String companyPhoneNumber, String businessType, String imageUri,
-                                        VerificationStatus verificationStatus, LocalDateTime createdDate,
-                                        LocalDateTime lastModifiedDate) {
-        this.registrationId = registrationId;
-        this.companyName = companyName;
+    private CompanyRegistrationResponse(UUID id, String name, String address, String representativeName,
+                                        String companyRegistrationNumber, String companyPhoneNumber,
+                                        String businessType, String imageUri, VerificationStatus verificationStatus,
+                                        LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
         this.representativeName = representativeName;
         this.companyRegistrationNumber = companyRegistrationNumber;
-        this.companyAddress = companyAddress;
         this.companyPhoneNumber = companyPhoneNumber;
         this.businessType = businessType;
         this.imageUri = imageUri;
-        this.verificationStatus = verificationStatus;
+        this.verificationStatus = verificationStatus.getStatus();
         this.createdDate = createdDate;
         this.lastModifiedDate = lastModifiedDate;
     }

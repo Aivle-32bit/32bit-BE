@@ -65,7 +65,7 @@ public class AllowUnverifiedUserArgumentResolver implements HandlerMethodArgumen
     }
 
     private Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email)
+        return memberRepository.findByEmailAndIsDeletedFalse(email)
             .orElseThrow(() -> new AivleException(NO_SEARCH_MEMBER));
     }
 }

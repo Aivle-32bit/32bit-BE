@@ -48,16 +48,55 @@ class HtmlEmailTemplate {
                 <p style="font-size: 24px; color: #f76c5e; font-weight: bold;">%s</p>
               </td>
             </tr>
+            """),
+
+        EMAIL_APPROVE("[재무탐정] 승인되었습니다!", """
+            <tr>
+              <td style="padding-top: 20px;">
+                <h1 style="font-size: 24px; color: #333333; margin: 0;">승인이 완료되었습니다!</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 10px; padding-bottom: 20px;">
+                <p style="font-size: 16px; color: #333333;">%s님, 축하합니다! 귀하의 요청이 승인되었습니다.</p>
+              </td>
+            </tr>
+            """),
+
+        EMAIL_REJECT("[재무탐정] 요청이 거절되었습니다.", """
+            <tr>
+              <td style="padding-top: 20px;">
+                <h1 style="font-size: 24px; color: #333333; margin: 0;">요청이 거절되었습니다.</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 10px; padding-bottom: 20px;">
+                <p style="font-size: 16px; color: #333333;">%s님, 안타깝게도 귀하의 요청이 다음과 같은 이유로 거절되었습니다:</p>
+                <p style="font-size: 16px; color: #f76c5e;">%s</p>
+              </td>
+            </tr>
+            """),
+        EMAIL_DORMANT("[재무탐정] 계정이 휴면 상태로 전환되었습니다.", """
+            <tr>
+              <td style="padding-top: 20px;">
+                <h1 style="font-size: 24px; color: #333333; margin: 0;">계정이 휴면 상태로 전환되었습니다.</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 10px; padding-bottom: 20px;">
+                <p style="font-size: 16px; color: #333333;">%s님, 안녕하세요! 귀하의 계정이 휴면 상태로 전환되었습니다.</p>
+              </td>
+            </tr>
             """);
 
         private final String subject;
         private final String content;
 
-        public String content(String code) {
-            return wrapBasicFrom(content.formatted(code));
+        public String content(String... args) {
+            return wrapBasicForm(content.formatted((Object[]) args));
         }
 
-        private String wrapBasicFrom(String content) {
+        private String wrapBasicForm(String content) {
             return BASIC_FORM.formatted(content);
         }
 
@@ -68,5 +107,4 @@ class HtmlEmailTemplate {
 
     private HtmlEmailTemplate() {
     }
-
 }

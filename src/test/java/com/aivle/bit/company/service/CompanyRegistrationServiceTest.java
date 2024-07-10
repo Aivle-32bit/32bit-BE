@@ -92,7 +92,7 @@ public class CompanyRegistrationServiceTest {
         List<CompanyRegistrationResponse> responses = companyRegistrationService.findAllByMember(member);
 
         assertEquals(1, responses.size());
-        assertEquals("Test Company", responses.get(0).getCompanyName());
+        assertEquals("Test Company", responses.get(0).getName());
         verify(companyRegistrationRepository, times(1)).findAllByMember(any(Member.class));
     }
 }
