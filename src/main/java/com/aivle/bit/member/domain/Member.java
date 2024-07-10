@@ -1,6 +1,7 @@
 package com.aivle.bit.member.domain;
 
 import static com.aivle.bit.global.encode.PasswordEncoderSHA256.encode;
+import static com.aivle.bit.global.encode.PasswordEncoderSHA256.matches;
 import static com.aivle.bit.global.exception.ErrorCode.*;
 
 import com.aivle.bit.company.domain.Company;
@@ -100,16 +101,18 @@ public class Member extends BaseTimeEntity {
     }
 
     public void changePassword(String newPassword, String encodedOldPassword) {
-        if (this.password.equals(encode(newPassword))) {
-            throw new AivleException(DUPLICATE_PASSWORD);
-        }
-
         if (!isValidPassword(newPassword)) {
             throw new AivleException(INVALID_PASSWORD_FORMAT);
         }
 
-        System.out.println("newPassword = " + newPassword);
-        System.out.println("encodedOldPassword = " + encodedOldPassword);
+        if (!matches(encodedOldPassword, password)) {
+            throw new AivleException(AUTH_INVALID_PASSWORD);
+        }
+
+        if (this.password.equals(encode(newPassword))) {
+            throw new AivleException(DUPLICATE_PASSWORD);
+        }
+
         this.password = encode(newPassword);
     }
 }
