@@ -50,9 +50,13 @@ public class Board extends BaseTimeEntity {
     @Comment("True - 비밀글, False - 공개글")
     private Boolean isSecret;
 
+    @Column(nullable = false)
+    @Comment("조회수")
+    private int viewCount;
+
     @Builder
     public Board(Long id, String title, String content, Member member, Long parentId, Boolean isDeleted,
-                 Boolean isSecret) {
+                 Boolean isSecret, int viewCount) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -60,6 +64,7 @@ public class Board extends BaseTimeEntity {
         this.parentId = parentId;
         this.isDeleted = isDeleted;
         this.isSecret = isSecret;
+        this.viewCount = viewCount;
     }
 
     public static Board of(String title, String content, Member member) {
@@ -70,11 +75,15 @@ public class Board extends BaseTimeEntity {
             .parentId(null)
             .isDeleted(false)
             .isSecret(false)
+            .viewCount(0)
             .build();
     }
 
-
     public boolean canView(Member member) {
         return !this.isSecret || this.member.equals(member);
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
     }
 }

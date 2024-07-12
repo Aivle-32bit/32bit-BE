@@ -55,7 +55,8 @@ public class BoardService {
         if (!board.canView(member)) {
             throw new AivleException(POST_FORBIDDEN);
         }
-        return board;
+        board.incrementViewCount();  // 조회수 증가
+        return boardRepository.save(board);
     }
 
 
