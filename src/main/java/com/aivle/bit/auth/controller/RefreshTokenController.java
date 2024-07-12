@@ -1,7 +1,7 @@
 package com.aivle.bit.auth.controller;
 
-import com.aivle.bit.auth.dto.RefreshTokenRequest;
-import com.aivle.bit.auth.dto.TokenResponse;
+import com.aivle.bit.auth.dto.request.RefreshTokenRequest;
+import com.aivle.bit.auth.dto.response.TokenResponse;
 import com.aivle.bit.auth.jwt.JwtTokenProvider;
 import com.aivle.bit.auth.service.RefreshTokenService;
 import com.aivle.bit.member.domain.MemberState;

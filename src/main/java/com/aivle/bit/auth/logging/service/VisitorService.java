@@ -17,9 +17,9 @@ public class VisitorService {
 
     public void recordVisit(String sessionId) {
         LocalDate today = LocalDate.now();
-        uniqueVisitors.putIfAbsent(sessionId, today);
-        if (!uniqueVisitors.get(sessionId).equals(today)) {
-            uniqueVisitors.put(sessionId, today);
+
+        // 기존 방문 기록이 없거나, 날짜가 오늘과 다를 경우에만 카운트 증가
+        if (uniqueVisitors.put(sessionId, today) == null || !uniqueVisitors.get(sessionId).equals(today)) {
             incrementVisitCount(today);
         }
     }
