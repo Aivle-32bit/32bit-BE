@@ -5,10 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company {
 
     @Id
@@ -19,5 +22,14 @@ public class Company {
     private String name;
 
     @Column(nullable = false)
-    private String industry;
+    private String businessType;
+
+    private Company(String name, String businessType) {
+        this.name = name;
+        this.businessType = businessType;
+    }
+
+    public static Company of(String name, String businessType) {
+        return new Company(name, businessType);
+    }
 }

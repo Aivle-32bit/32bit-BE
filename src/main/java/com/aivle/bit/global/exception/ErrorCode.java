@@ -36,6 +36,7 @@ public enum ErrorCode {
     INVALID_PHONE_NUMBER_FORMAT(BAD_REQUEST, "전화번호 형식이 올바르지 않습니다."),
     MEMBER_ALREADY_DELETED(BAD_REQUEST, "이미 탈퇴한 회원입니다."),
     INVALID_MEMBER_STATE(BAD_REQUEST, "유효하지 않은 회원 상태입니다."),
+    ALREADY_REGISTERED_COMPANY(BAD_REQUEST, "이미 등록된 회사입니다."),
 
     // 401 Unauthorized
     INVALID_TOKEN_EXTRACTOR(UNAUTHORIZED, "토큰 추출에 실패했습니다."),

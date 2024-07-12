@@ -36,14 +36,14 @@ public class MemberManageController {
         return memberManageService.findAllMember(state);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/latest-registration")
     @ResponseStatus(HttpStatus.OK)
-    public List<CompanyRegistrationResponse> getCompanyRegistrations(@PathVariable Long id) {
-        log.info("Fetching company registrations for member ID: {}", id);
-        return memberManageService.findCompanyRegistrations(id);
+    public CompanyRegistrationResponse getLatestCompanyRegistration(@PathVariable Long id) {
+        log.info("Fetching the most recent company registration for member ID: {}", id);
+        return memberManageService.findLatestByMember(id);
     }
 
-    @PostMapping("/members/{id}/approve")
+    @PostMapping("/{id}/approve")
     @ResponseStatus(HttpStatus.OK)
     public void approveUser(@PathVariable UUID id) {
         log.info("Approving member with ID: {}", id);
