@@ -16,4 +16,6 @@ public interface CompanyRegistrationRepository extends JpaRepository<CompanyRegi
     List<CompanyRegistration> findByMemberId(Long id);
 
     Optional<CompanyRegistration> findByRegistrationId(UUID uuid);
+
+    Optional<CompanyRegistration> findFirstByMemberIdOrderByModifiedAtDesc(Long id);
 }
