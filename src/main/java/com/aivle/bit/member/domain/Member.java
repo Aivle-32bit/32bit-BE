@@ -166,4 +166,8 @@ public class Member extends BaseTimeEntity {
             throw new AivleException(MEMBER_ALREADY_DELETED);
         }
     }
+
+    public void updateCompany(Company company) {
+        this.company = company;
+    }
 }
