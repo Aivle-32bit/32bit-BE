@@ -1,4 +1,4 @@
-package com.aivle.bit.auth.dto;
+package com.aivle.bit.auth.dto.response;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;

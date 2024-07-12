@@ -1,7 +1,9 @@
 package com.aivle.bit.auth.controller;
 
-import com.aivle.bit.auth.dto.SignInRequest;
-import com.aivle.bit.auth.dto.TokenResponse;
+import com.aivle.bit.auth.dto.request.SignInRequest;
+import com.aivle.bit.auth.dto.response.SignInResponse;
+import com.aivle.bit.auth.dto.response.SignInResult;
+import com.aivle.bit.auth.dto.response.TokenResponse;
 import com.aivle.bit.auth.service.SignInService;
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.dto.request.EmailVerificationRequest;
@@ -16,7 +18,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,12 +38,15 @@ public class AuthController {
     private final VerifyCertificationService verifyCertificationService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<String> signIn(@RequestBody @Valid SignInRequest signInRequest,
-                                         HttpServletResponse response) {
-        TokenResponse tokenResponse = signInService.signInUser(signInRequest);
+    @ResponseStatus(HttpStatus.OK)
+    public SignInResult signIn(@RequestBody @Valid SignInRequest signInRequest,
+                               HttpServletResponse response) {
+        SignInResponse signInResponse = signInService.signInUser(signInRequest);
+
+        TokenResponse tokenResponse = signInResponse.tokenResponse();
         tokenResponse.setAccessToken(response, EXPIRATION_TIME);
 
-        return ResponseEntity.ok().body(tokenResponse.refreshToken());
+        return SignInResult.from(signInResponse);
     }
 
     @PostMapping("/sign-up")

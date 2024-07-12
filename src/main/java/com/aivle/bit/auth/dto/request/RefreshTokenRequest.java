@@ -1,4 +1,4 @@
-package com.aivle.bit.auth.dto;
+package com.aivle.bit.auth.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
