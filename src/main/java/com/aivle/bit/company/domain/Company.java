@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
@@ -24,12 +25,21 @@ public class Company {
     @Column(nullable = false)
     private String businessType;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Comment("True-삭제, False-삭제 아님")
+    private boolean isDeleted;
+
     private Company(String name, String businessType) {
         this.name = name;
         this.businessType = businessType;
+        this.isDeleted = false;
     }
 
     public static Company of(String name, String businessType) {
         return new Company(name, businessType);
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }

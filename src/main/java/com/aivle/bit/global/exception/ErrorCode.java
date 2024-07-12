@@ -28,6 +28,7 @@ public enum ErrorCode {
     PAYLOAD_EMAIL_MISSING(BAD_REQUEST, "페이로드에 이메일이 없습니다."),
     NO_SEARCH_MEMBER(BAD_REQUEST, "유저를 찾을 수 없습니다."),
     NO_SEARCH_COMPANY_REGISTRATION(BAD_REQUEST, "회사 등록 정보를 찾을 수 없습니다."),
+    NO_SEARCH_COMPANY(BAD_REQUEST, "회사를 찾을 수 없습니다."),
     INVALID_JWT_TOKEN(BAD_REQUEST, "JWT 유효성 검증에 실패하였습니다."),
     DUPLICATE_PASSWORD(BAD_REQUEST, "중복된 비밀번호 요청입니다."),
     INVALID_FILE_FORMAT(BAD_REQUEST, "지원하지 않는 파일 형식입니다."),
@@ -37,7 +38,6 @@ public enum ErrorCode {
     MEMBER_ALREADY_DELETED(BAD_REQUEST, "이미 탈퇴한 회원입니다."),
     INVALID_MEMBER_STATE(BAD_REQUEST, "유효하지 않은 회원 상태입니다."),
     ALREADY_REGISTERED_COMPANY(BAD_REQUEST, "이미 등록된 회사입니다."),
-
     // 401 Unauthorized
     INVALID_TOKEN_EXTRACTOR(UNAUTHORIZED, "토큰 추출에 실패했습니다."),
     NOT_AUTHORIZED(UNAUTHORIZED, "인증되지 않은 사용자입니다."),
