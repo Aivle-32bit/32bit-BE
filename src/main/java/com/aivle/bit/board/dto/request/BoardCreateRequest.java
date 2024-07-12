@@ -1,16 +1,12 @@
 package com.aivle.bit.board.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.aivle.bit.member.domain.Member;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class BoardCreateRequest {
+public record BoardCreateRequest(
+    String title,
+    String content,
+    Member member,
+    Boolean isSecret
+) {
 
-    private String title;
-    private String content;
-    private boolean secret;
-    private String boardpw;
 }

@@ -1,17 +1,18 @@
 package com.aivle.bit.board.service;
 
 import static com.aivle.bit.global.exception.ErrorCode.CONTENT_REQUIRED;
-import static com.aivle.bit.global.exception.ErrorCode.PASSWORD_REQUIRED_FOR_SECRET_POST;
+import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
+import static com.aivle.bit.global.exception.ErrorCode.POST_NOTFOUND;
 import static com.aivle.bit.global.exception.ErrorCode.TITLE_REQUIRED;
 
 import com.aivle.bit.board.domain.Board;
-import com.aivle.bit.board.domain.BoardDetails;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
 import com.aivle.bit.board.repository.BoardRepository;
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.member.domain.Member;
-import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,33 +24,49 @@ public class BoardService {
 
     @Transactional
     public Board createBoard(Member member, BoardCreateRequest boardCreateRequest) {
-        if (boardCreateRequest.getTitle() == null || boardCreateRequest.getTitle().isEmpty()) {
+        if (boardCreateRequest.title() == null || boardCreateRequest.title().isEmpty()) {
             throw new AivleException(TITLE_REQUIRED);
         }
-        if (boardCreateRequest.getContent() == null || boardCreateRequest.getContent().isEmpty()) {
+        if (boardCreateRequest.content() == null || boardCreateRequest.content().isEmpty()) {
             throw new AivleException(CONTENT_REQUIRED);
         }
-        if (boardCreateRequest.isSecret() && (boardCreateRequest.getBoardpw() == null || boardCreateRequest.getBoardpw().isEmpty())) {
-            throw new AivleException(PASSWORD_REQUIRED_FOR_SECRET_POST);
-        }
 
-        // BoardDetails 객체 생성
-        BoardDetails boardDetails = BoardDetails.builder()
-            .secret(boardCreateRequest.isSecret())
-            .boardpw(boardCreateRequest.getBoardpw())
-            .build();
-
-        // 빌더 패턴을 사용하여 Board 객체 생성
         Board board = Board.builder()
-            .title(boardCreateRequest.getTitle())
-            .content(boardCreateRequest.getContent())
-            .memberId(member.getId())
-            .state(0)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .boardDetails(boardDetails)
+            .title(boardCreateRequest.title())
+            .content(boardCreateRequest.content())
+            .member(member)
+            .parentId(null)
+            .isDeleted(false)
+            .isSecret(boardCreateRequest.isSecret())
             .build();
 
         return boardRepository.save(board);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Board> findAll(Pageable pageable) {
+        return boardRepository.findAll(pageable).getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public Board findBoard(Long boardId, Member member) {
+        Board board = boardRepository.findById(boardId)
+            .orElseThrow(() -> new AivleException(POST_NOTFOUND));
+        if (!board.canView(member)) {
+            throw new AivleException(POST_FORBIDDEN);
+        }
+        return board;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Board> findBoardByTitle(String title) {
+        return boardRepository.findByTitleContaining(title);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Board> findMyBoard(Member member) {
+        return boardRepository.findAllByMemberId(member.getId());
     }
 }

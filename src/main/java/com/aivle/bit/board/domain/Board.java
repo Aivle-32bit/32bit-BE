@@ -1,57 +1,80 @@
 package com.aivle.bit.board.domain;
 
+import com.aivle.bit.global.domain.BaseTimeEntity;
+import com.aivle.bit.member.domain.Member;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import java.time.LocalDateTime;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Getter
-@Setter
 @Entity
-@NoArgsConstructor
-public class Board {
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+public class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String content;
-    private Long memberId;
-    private int state;   // 삭제 여부
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
-    @OneToOne
-    private BoardDetails boardDetails;
+    @Column(nullable = false)
+    @Comment("제목")
+    private String title;
+
+    @Column(nullable = false)
+    @Comment("내용")
+    private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    @Comment("회원 ID")
+    private Member member;
+
+    @Column
+    @Comment("질문글에 대한 id")
+    private Long parentId;
+
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Comment("True-삭제, False-삭제 아님")
+    private Boolean isDeleted;
+
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Comment("True - 비밀글, False - 공개글")
+    private Boolean isSecret;
 
     @Builder
-    public Board(Long id, String title, String content, Long memberId, int state,
-                 LocalDateTime createdAt, LocalDateTime updatedAt, BoardDetails boardDetails) {
+    public Board(Long id, String title, String content, Member member, Long parentId, Boolean isDeleted,
+                 Boolean isSecret) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
-        this.state = state;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.boardDetails = boardDetails;
+        this.member = member;
+        this.parentId = parentId;
+        this.isDeleted = isDeleted;
+        this.isSecret = isSecret;
     }
 
-    public static Board of(String title, String content, Long memberId) {
+    public static Board of(String title, String content, Member member) {
         return Board.builder()
             .title(title)
             .content(content)
-            .memberId(memberId)
-            .state(0)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .boardDetails(BoardDetails.builder().secret(false).boardpw(null).build())
+            .member(member)
+            .parentId(null)
+            .isDeleted(false)
+            .isSecret(false)
             .build();
+    }
+
+
+    public boolean canView(Member member) {
+        return !this.isSecret || this.member.equals(member);
     }
 }
