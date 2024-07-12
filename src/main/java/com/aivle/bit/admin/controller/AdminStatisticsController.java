@@ -18,27 +18,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/statistics")
 @Slf4j
 public class AdminStatisticsController {
 
     private final AdminStatisticsService adminStatisticsService;
 
-    @GetMapping("/dashboard/member-states")
+    @GetMapping("/member-states")
     @ResponseStatus(HttpStatus.OK)
     public MemberStateCountsResponse getMemberStateCounts() {
         log.info("Fetching member state counts");
         return adminStatisticsService.getMemberStateCounts();
     }
 
-    @GetMapping("/dashboard/login-statistics")
+    @GetMapping("/login-statistics")
     @ResponseStatus(HttpStatus.OK)
     public LoginStatisticsResponse getLoginStatistics() {
         log.info("Fetching login statistics");
         return adminStatisticsService.getLoginStatistics();
     }
 
-    @GetMapping("/dashboard/registration-statistics")
+    @GetMapping("/registration-statistics")
     @ResponseStatus(HttpStatus.OK)
     public RegistrationStatisticsResponse getRegistrationStatistics() {
         log.info("Fetching registration statistics");
@@ -46,7 +46,7 @@ public class AdminStatisticsController {
     }
 
 
-    @GetMapping("/dashboard/visitor-statistics")
+    @GetMapping("/visitor-statistics")
     @ResponseStatus(HttpStatus.OK)
     public VisitorStatisticsResponse getVisitorStatistics(
         @RequestParam(value = "startDate", required = false, defaultValue = "#{T(java.time.LocalDate).now().minusDays(7)}")
