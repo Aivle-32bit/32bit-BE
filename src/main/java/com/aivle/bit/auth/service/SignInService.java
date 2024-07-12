@@ -38,6 +38,7 @@ public class SignInService {
         Duration expiryDuration = jwtTokenProvider.getRefreshTokenExpiryDurationFromNow();
         tokenRepository.setValues(email, refreshToken, expiryDuration);
 
-        return SignInResponse.of(TokenResponse.of(accessToken, refreshToken), member.getState(), member.getIsAdmin());
+        return SignInResponse.of(TokenResponse.of(accessToken, refreshToken), member.getId(), member.getName(),
+            member.getState(), member.getIsAdmin());
     }
 }
