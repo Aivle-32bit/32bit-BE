@@ -3,6 +3,7 @@ package com.aivle.bit.member.dto.response;
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.domain.MemberState;
 import java.time.LocalDate;
+import java.util.function.Function;
 import lombok.Getter;
 
 @Getter
@@ -31,7 +32,7 @@ public class MemberFindResponse {
         this.imageUrl = imageUrl;
     }
 
-    public static MemberFindResponse from(Member member) {
+    public static MemberFindResponse from(Member member, Function<String, String> urlGenerator) {
         return new MemberFindResponse(
             member.getId(),
             member.getEmail(),
@@ -41,7 +42,7 @@ public class MemberFindResponse {
             member.getState(),
             member.getCompany() != null ? member.getCompany().getName() : "소속 없음",
             member.getCreatedAt().toLocalDate(),
-            member.getImageUrl() != null ? member.getImageUrl() : ""
+            member.getImageUrl() != null ? urlGenerator.apply(member.getImageUrl()) : ""
         );
     }
 }

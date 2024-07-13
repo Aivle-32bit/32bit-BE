@@ -178,4 +178,24 @@ public class Member extends BaseTimeEntity {
     public void updateImageUrl(String imageUrl) {
         this.ImageUrl = imageUrl;
     }
+
+    public void deleteImageUrl() {
+        this.ImageUrl = null;
+    }
+
+    public void updateInfo(String name, String address) {
+        updateName(name);
+        updateAddress(address);
+    }
+
+    private void updateName(String name) {
+        if (!isValidName(name)) {
+            throw new AivleException(INVALID_NAME_FORMAT);
+        }
+        this.name = name;
+    }
+
+    private void updateAddress(String address) {
+        this.address = address;
+    }
 }
