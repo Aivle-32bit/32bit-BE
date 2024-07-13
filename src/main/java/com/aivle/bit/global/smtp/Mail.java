@@ -1,19 +1,14 @@
 package com.aivle.bit.global.smtp;
 
-import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_DORMANT;
-import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_VERIFICATION;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_APPROVE;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_DORMANT;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_REJECT;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_VERIFICATION;
 
-import com.amazonaws.services.simpleemail.model.Body;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import lombok.Getter;
 
+@Getter
 public class Mail {
-
-    private static final String FROM_EMAIL = "no-reply@aivle.site";
 
     private final String to;
     private final String subject;
@@ -47,28 +42,5 @@ public class Mail {
         return new Mail(to,
             EMAIL_DORMANT.subject(),
             EMAIL_DORMANT.content(name));
-    }
-
-    public SendEmailRequest toSes() {
-        return new SendEmailRequest()
-            .withSource(FROM_EMAIL)
-            .withDestination(generateDestination())
-            .withMessage(generateMessage());
-    }
-
-    private Destination generateDestination() {
-        return new Destination().withToAddresses(to);
-    }
-
-    private Message generateMessage() {
-        return new Message()
-            .withSubject(generateContent(subject))
-            .withBody(new Body().withHtml(generateContent(content)));
-    }
-
-    private Content generateContent(String content) {
-        return new Content()
-            .withCharset("UTF-8")
-            .withData(content);
     }
 }
