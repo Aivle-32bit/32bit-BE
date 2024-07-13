@@ -68,6 +68,10 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Column
+    @Comment("프로필 사진")
+    private String ImageUrl;
+
     protected Member() {
     }
 
@@ -169,5 +173,9 @@ public class Member extends BaseTimeEntity {
 
     public void updateCompany(Company company) {
         this.company = company;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.ImageUrl = imageUrl;
     }
 }
