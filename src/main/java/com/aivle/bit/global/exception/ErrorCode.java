@@ -51,7 +51,8 @@ public enum ErrorCode {
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버에 문제가 발생했습니다."),
     PASSWORD_ENCRYPTION_ERROR(INTERNAL_SERVER_ERROR, "암호화에 문제가 발생했습니다. 관리자에게 문의하세요."),
     SHA256AlgorithmNotFoundException(INTERNAL_SERVER_ERROR, "SHA-256 알고리즘을 찾을 수 없습니다."),
-    FILE_UPLOAD_ERROR(INTERNAL_SERVER_ERROR, "파일 업로드 중 오류가 발생했습니다.");
+    FILE_UPLOAD_ERROR(INTERNAL_SERVER_ERROR, "파일 업로드 중 오류가 발생했습니다."),
+    FILE_DELETE_ERROR(INTERNAL_SERVER_ERROR, "파일 삭제 중 오류가 발생했습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 }
