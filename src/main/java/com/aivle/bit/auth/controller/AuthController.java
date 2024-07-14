@@ -69,4 +69,10 @@ public class AuthController {
     public void verify(@Valid @RequestBody final EmailVerificationRequest emailVerificationRequest) {
         verifyCertificationService.verify(emailVerificationRequest.email(), emailVerificationRequest.code());
     }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(HttpServletResponse response) {
+        TokenResponse.expireAccessToken(response);
+    }
 }
