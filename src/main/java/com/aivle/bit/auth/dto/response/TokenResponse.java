@@ -24,7 +24,7 @@ public record TokenResponse(String accessToken, String refreshToken) {
     public void setAccessToken(HttpServletResponse response, int expirationTime) {
         ResponseCookie accessTokenCookie = ResponseCookie.from(HttpHeaders.AUTHORIZATION, accessToken)
             .httpOnly(true)
-            .secure(true)
+//            .secure(true) 개발 환경에서는 주석 처리
             .path("/")
             .maxAge(expirationTime)
             .build();
