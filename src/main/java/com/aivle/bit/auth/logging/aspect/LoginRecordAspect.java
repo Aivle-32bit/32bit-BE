@@ -32,9 +32,9 @@ public class LoginRecordAspect {
 
     @AfterReturning(pointcut = "signInPointcut(signInRequest)", returning = "result", argNames = "signInRequest,result")
     public void logLoginAttempt(SignInRequest signInRequest, Object result) {
-        log.info("[Login Log] {} 로그인 시도", request.getRemoteAddr());
+        String ipAddress = getRealIpAddress(request);
+        log.info("[Login Log] {} 로그인 시도", ipAddress);
         if (result instanceof SignInResponse signInResponse) {
-            String ipAddress = request.getRemoteAddr();
             String userAgent = request.getHeader("User-Agent");
             Long userId = extractUserIdFromToken(signInResponse.tokenResponse().accessToken());
             boolean success = true;
@@ -45,8 +45,8 @@ public class LoginRecordAspect {
 
     @AfterThrowing(pointcut = "signInPointcut(signInRequest)", throwing = "ex", argNames = "signInRequest,ex")
     public void logLoginFailure(SignInRequest signInRequest, Exception ex) {
-        log.info("[Login Log] {} 로그인 실패", request.getRemoteAddr());
-        String ipAddress = request.getRemoteAddr();
+        String ipAddress = getRealIpAddress(request);
+        log.info("[Login Log] {} 로그인 실패", ipAddress);
         String userAgent = request.getHeader("User-Agent");
         Long userId = memberRepository.findByEmailAndIsDeletedFalse(signInRequest.email())
             .map(Member::getId)
@@ -58,5 +58,19 @@ public class LoginRecordAspect {
 
     private Long extractUserIdFromToken(String token) {
         return jwtTokenProvider.extractIdFromAccessToken(token);
+    }
+
+    private String getRealIpAddress(HttpServletRequest request) {
+        String ipAddress = request.getHeader("X-Forwarded-For");
+        if (ipAddress == null || ipAddress.isEmpty()) {
+            ipAddress = request.getRemoteAddr();
+        } else {
+            ipAddress = ipAddress.split(",")[0].trim();
+        }
+
+        if ("0:0:0:0:0:0:0:1".equals(ipAddress)) {
+            ipAddress = "127.0.0.1";
+        }
+        return ipAddress;
     }
 }
