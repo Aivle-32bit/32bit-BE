@@ -2,9 +2,11 @@ package com.aivle.bit.global.smtp;
 
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_APPROVE;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_DORMANT;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_NOTICE;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_REJECT;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_VERIFICATION;
 
+import com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType;
 import lombok.Getter;
 
 @Getter
@@ -42,5 +44,11 @@ public class Mail {
         return new Mail(to,
             EMAIL_DORMANT.subject(),
             EMAIL_DORMANT.content(name));
+    }
+
+    public static Mail notice(String to, String content) {
+        return new Mail(to,
+            EMAIL_NOTICE.subject(),
+            EMAIL_NOTICE.content(content));
     }
 }
