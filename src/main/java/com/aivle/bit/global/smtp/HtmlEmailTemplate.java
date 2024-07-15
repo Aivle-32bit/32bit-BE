@@ -87,6 +87,19 @@ class HtmlEmailTemplate {
                 <p style="font-size: 16px; color: #333333;">%s님, 안녕하세요! 귀하의 계정이 휴면 상태로 전환되었습니다.</p>
               </td>
             </tr>
+            """),
+
+        EMAIL_NOTICE("[재무탐정] 공지사항","""
+            <tr>
+              <td style="padding-top: 20px;">
+                <h1 style="font-size: 24px; color: #333333; margin: 0;">공지사항</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 10px; padding-bottom: 20px;">
+                <p style="font-size: 16px; color: #333333;">%s</p>
+              </td>
+            </tr>
             """);
 
         private final String subject;
