@@ -1,7 +1,7 @@
 package com.aivle.bit.auth.logging.aspect;
 
 import com.aivle.bit.auth.dto.request.SignInRequest;
-import com.aivle.bit.auth.dto.response.SignInResponse;
+import com.aivle.bit.auth.dto.response.TokenResponse;
 import com.aivle.bit.auth.jwt.JwtTokenProvider;
 import com.aivle.bit.auth.logging.service.LoginRecordService;
 import com.aivle.bit.member.domain.Member;
@@ -34,9 +34,9 @@ public class LoginRecordAspect {
     public void logLoginAttempt(SignInRequest signInRequest, Object result) {
         String ipAddress = getRealIpAddress(request);
         log.info("[Login Log] {} 로그인 시도", ipAddress);
-        if (result instanceof SignInResponse signInResponse) {
+        if (result instanceof TokenResponse tokenResponse) {
             String userAgent = request.getHeader("User-Agent");
-            Long userId = extractUserIdFromToken(signInResponse.tokenResponse().accessToken());
+            Long userId = extractUserIdFromToken(tokenResponse.accessToken());
             boolean success = true;
 
             loginRecordService.logLoginAttempt(ipAddress, userAgent, userId, success);
