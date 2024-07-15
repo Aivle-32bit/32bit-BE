@@ -44,16 +44,7 @@ public class AllowUnverifiedUserArgumentResolver implements HandlerMethodArgumen
         String jwtToken = extractJwtTokenFromCookies(webRequest);
         String email = jwtTokenProvider.extractEmailFromAccessToken(jwtToken);
 
-        Member memberByEmail = findMemberByEmail(email);
-
-        validateUnverifiedMemberState(memberByEmail);
-        return memberByEmail;
-    }
-
-    private void validateUnverifiedMemberState(Member member) {
-        if (member.getState() == MemberState.VERIFIED) {
-            throw new AivleException(INVALID_REQUEST);
-        }
+        return findMemberByEmail(email);
     }
 
     private String extractJwtTokenFromCookies(NativeWebRequest webRequest) {
