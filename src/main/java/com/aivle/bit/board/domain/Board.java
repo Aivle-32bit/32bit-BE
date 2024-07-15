@@ -1,23 +1,31 @@
 package com.aivle.bit.board.domain;
 
+import static com.aivle.bit.global.exception.ErrorCode.BOARD_AUTHOR_ONLY_EXCEPTION;
+
 import com.aivle.bit.global.domain.BaseTimeEntity;
+import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseTimeEntity {
 
@@ -33,7 +41,8 @@ public class Board extends BaseTimeEntity {
     @Comment("내용")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    //    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", nullable = false)
     @Comment("회원 ID")
     private Member member;
@@ -54,10 +63,15 @@ public class Board extends BaseTimeEntity {
     @Comment("조회수")
     private int viewCount;
 
-    @Builder
-    public Board(Long id, String title, String content, Member member, Long parentId, Boolean isDeleted,
-                 Boolean isSecret, int viewCount) {
-        this.id = id;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
+
+    private Board(String title, String content, Member member, Long parentId, Boolean isDeleted,
+                  Boolean isSecret, int viewCount, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.title = title;
         this.content = content;
         this.member = member;
@@ -65,25 +79,41 @@ public class Board extends BaseTimeEntity {
         this.isDeleted = isDeleted;
         this.isSecret = isSecret;
         this.viewCount = viewCount;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 
-    public static Board of(String title, String content, Member member) {
-        return Board.builder()
-            .title(title)
-            .content(content)
-            .member(member)
-            .parentId(null)
-            .isDeleted(false)
-            .isSecret(false)
-            .viewCount(0)
-            .build();
+    public static Board create(String title, String content, Member member, Boolean isSecret) {
+        return new Board(title, content, member, null, false, isSecret, 0, LocalDateTime.now(), LocalDateTime.now());
+    }
+
+    public void update(String title, String content, Boolean isSecret) {
+        this.title = title;
+        this.content = content;
+        this.isSecret = isSecret;
+        this.setModifiedAt(LocalDateTime.now());
+    }
+
+
+    public void isAuthor(Member member) {
+        if (!this.member.getId().equals(member.getId())) {
+            throw new AivleException(BOARD_AUTHOR_ONLY_EXCEPTION);
+        }
     }
 
     public boolean canView(Member member) {
         return !this.isSecret || this.member.equals(member);
     }
 
+    public boolean isDeleted() {
+        return this.isDeleted;
+    }
+
     public void incrementViewCount() {
         this.viewCount++;
+    }
+
+    public void markAsDeleted() {
+        this.isDeleted = true;
     }
 }

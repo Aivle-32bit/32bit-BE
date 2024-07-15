@@ -37,7 +37,8 @@ public enum ErrorCode {
     CONTENT_REQUIRED(BAD_REQUEST, "내용을 입력하세요."),
     POST_NOTFOUND(BAD_REQUEST, "게시글을 찾을 수 없습니다."),
     POST_FORBIDDEN(BAD_REQUEST, "비밀글을 열람할 권한이 없습니다."),
-
+    POST_CANNOT_EDIT(BAD_REQUEST, "답변이 달린 게시글은 수정할 수 없습니다."),
+    BOARD_AUTHOR_ONLY_EXCEPTION(BAD_REQUEST, "수정, 삭제 권한이 없습니다."),
     // 401 Unauthorized
     INVALID_TOKEN_EXTRACTOR(UNAUTHORIZED, "토큰 추출에 실패했습니다."),
     NOT_AUTHORIZED(UNAUTHORIZED, "인증되지 않은 사용자입니다."),
