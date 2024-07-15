@@ -83,33 +83,42 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<Board> findAll(Pageable pageable) {
-        return boardRepository.findByIsDeletedFalse(pageable).getContent();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Board> findBoardByTitle(String title) {
-        if (title == null || title.isBlank()) {
-            return List.of();
-        }
-        return boardRepository.findByTitleContaining(title)
+    public List<BoardReadResponse> findAll(Pageable pageable) {
+        return boardRepository.findByIsDeletedFalse(pageable).getContent()
             .stream()
-            .sorted((b1, b2) -> {
-                int comparison = b1.getTitle().compareToIgnoreCase(b2.getTitle());
-                if (comparison == 0) {
-                    return b1.getCreatedAt().compareTo(b2.getCreatedAt());
-                }
-                return comparison;
-            })
+            .map(board -> BoardReadResponse.from(board, board.getMember())) // 반환 형식 변경
             .toList();
     }
 
 
     @Transactional(readOnly = true)
-    public List<Board> findMyBoard(Member member) {
+    public List<BoardReadResponse> findBoardByTitle(String title) {
+        if (title == null || title.isBlank()) {
+            return List.of();
+        }
+        return boardRepository.findByTitleContaining(title)
+            .stream()
+            .filter(board -> !board.isDeleted())
+            .sorted((b1, b2) -> {
+                int frequencyComparison = Integer.compare(
+                    (int) b2.getTitle().toLowerCase().chars().filter(ch -> ch == title.toLowerCase().charAt(0)).count(),
+                    (int) b1.getTitle().toLowerCase().chars().filter(ch -> ch == title.toLowerCase().charAt(0)).count()
+                );
+                if (frequencyComparison == 0) {
+                    return b2.getCreatedAt().compareTo(b1.getCreatedAt());
+                }
+                return frequencyComparison;
+            })
+            .map(board -> BoardReadResponse.from(board, board.getMember()))
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardReadResponse> findMyBoard(Member member) {
         return boardRepository.findAllByMemberId(member.getId())
             .stream()
             .filter(board -> !board.isDeleted())
+            .map(board -> BoardReadResponse.from(board, board.getMember())) // 반환 형식 변경
             .toList();
     }
 
@@ -122,9 +131,10 @@ public class BoardService {
             throw new AivleException(POST_FORBIDDEN);
         }
 
-        board.incrementViewCount();  // 조회수 증가
-        boardRepository.save(board); // 변경 사항을 저장
+        board.incrementViewCount();
+        boardRepository.save(board);
 
         return board;
     }
+
 }

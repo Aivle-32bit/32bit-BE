@@ -68,21 +68,22 @@ public class BoardController {
     @Comment("글 목록")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Board> findAll(Pageable pageable) {
+    public List<BoardReadResponse> findAll(Pageable pageable) {
         return boardService.findAll(pageable);
     }
 
     @Comment("제목으로 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<Board> findBoardByTitle(@RequestParam String title) {
+    public List<BoardReadResponse> findBoardByTitle(@RequestParam String title) {
         return boardService.findBoardByTitle(title);
     }
 
     @Comment("내가 쓴 게시글 조회")
     @GetMapping("/my_boards")
     @ResponseStatus(HttpStatus.OK)
-    public List<Board> findMyBoard(@JwtLogin Member member) {
+    public List<BoardReadResponse> findMyBoard(@JwtLogin Member member) {
         return boardService.findMyBoard(member);
     }
+
 }

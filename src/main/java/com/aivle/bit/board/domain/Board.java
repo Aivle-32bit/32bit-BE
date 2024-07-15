@@ -41,7 +41,6 @@ public class Board extends BaseTimeEntity {
     @Comment("내용")
     private String content;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", nullable = false)
     @Comment("회원 ID")
