@@ -61,7 +61,7 @@ public class BoardController {
     @GetMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
     public BoardReadResponse findBoard(@PathVariable Long boardId, @JwtLogin Member member) {
-        Board board = boardService.findBoardForUpdate(boardId, member);  //
+        Board board = boardService.findBoardForUpdate(boardId, member);
         return BoardReadResponse.from(board, member);
     }
 

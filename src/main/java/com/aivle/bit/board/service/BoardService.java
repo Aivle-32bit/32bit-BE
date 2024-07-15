@@ -11,6 +11,7 @@ import static com.aivle.bit.global.exception.ErrorCode.TITLE_REQUIRED;
 import com.aivle.bit.board.domain.Board;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
 import com.aivle.bit.board.dto.request.BoardUpdateRequest;
+import com.aivle.bit.board.dto.response.BoardReadResponse;
 import com.aivle.bit.board.repository.BoardRepository;
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.member.domain.Member;
@@ -103,6 +104,7 @@ public class BoardService {
             .toList();
     }
 
+
     @Transactional(readOnly = true)
     public List<Board> findMyBoard(Member member) {
         return boardRepository.findAllByMemberId(member.getId())
@@ -119,6 +121,10 @@ public class BoardService {
         if (!board.canView(member)) {
             throw new AivleException(POST_FORBIDDEN);
         }
+
+        board.incrementViewCount();  // 조회수 증가
+        boardRepository.save(board); // 변경 사항을 저장
+
         return board;
     }
 }
