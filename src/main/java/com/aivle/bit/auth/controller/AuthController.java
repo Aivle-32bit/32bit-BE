@@ -37,12 +37,12 @@ public class AuthController {
 
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponse signIn(@RequestBody @Valid SignInRequest signInRequest,
-                                HttpServletResponse response) {
+    public String signIn(@RequestBody @Valid SignInRequest signInRequest,
+                         HttpServletResponse response) {
         TokenResponse tokenResponse = signInService.signInUser(signInRequest);
         tokenResponse.setAccessToken(response, EXPIRATION_TIME);
 
-        return tokenResponse;
+        return tokenResponse.refreshToken();
     }
 
     @PostMapping("/sign-up")
