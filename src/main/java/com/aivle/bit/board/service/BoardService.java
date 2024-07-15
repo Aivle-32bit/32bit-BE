@@ -133,7 +133,6 @@ public class BoardService {
 
         board.incrementViewCount();
         boardRepository.save(board);
-
         return board;
     }
 
