@@ -1,5 +1,6 @@
 package com.aivle.bit.company.service;
 
+import static com.aivle.bit.global.exception.ErrorCode.FILE_DELETE_ERROR;
 import static com.aivle.bit.global.exception.ErrorCode.FILE_SIZE_EXCEEDED;
 import static com.aivle.bit.global.exception.ErrorCode.FILE_UPLOAD_ERROR;
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_FILE_FORMAT;
@@ -9,6 +10,7 @@ import com.aivle.bit.global.utils.RandomGenerator;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -102,5 +104,18 @@ public class S3Service {
         URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
         return url.toString();
+    }
+
+    public void deleteImage(String key) {
+        if (key == null) {
+            return;
+        }
+        try {
+            s3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+            log.info("Successfully deleted image with key: {}", key);
+        } catch (SdkClientException e) {
+            log.error("Failed to delete image with key: {}", key, e);
+            throw new AivleException(FILE_DELETE_ERROR);
+        }
     }
 }

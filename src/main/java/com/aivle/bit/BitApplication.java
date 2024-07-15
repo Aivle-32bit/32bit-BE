@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableAsync(proxyTargetClass = true)
 @EnableConfigurationProperties(value = {
@@ -16,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableJpaAuditing
 @EnableRetry
 @SpringBootApplication
+@EnableScheduling
 public class BitApplication {
 
 	public static void main(String[] args) {

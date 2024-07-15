@@ -2,6 +2,7 @@ package com.aivle.bit.global.config;
 
 import com.aivle.bit.auth.interceptor.AdminInterceptor;
 import com.aivle.bit.auth.interceptor.MemberInterceptor;
+import com.aivle.bit.auth.interceptor.VisitorInterceptor;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ public class InterceptorAuthConfig implements WebMvcConfigurer {
     private final AdminInterceptor adminInterceptor;
     private final AdminArgumentResolver adminArgumentResolver;
     private final AllowUnverifiedUserArgumentResolver allowUnverifiedUserArgumentResolver;
+    private final VisitorInterceptor visitorInterceptor;
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
@@ -28,6 +30,11 @@ public class InterceptorAuthConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(visitorInterceptor)
+            .order(0)
+            .addPathPatterns("/**")
+            .excludePathPatterns("/error");
+
         registry.addInterceptor(memberInterceptor)
             .order(1)
             .addPathPatterns("/**")

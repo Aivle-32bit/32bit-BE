@@ -1,4 +1,4 @@
-package com.aivle.bit.auth.dto;
+package com.aivle.bit.auth.dto.response;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +25,7 @@ public record TokenResponse(String accessToken, String refreshToken) {
         ResponseCookie accessTokenCookie = ResponseCookie.from(HttpHeaders.AUTHORIZATION, accessToken)
             .httpOnly(true)
             .secure(true)
+            .sameSite("None")
             .path("/")
             .maxAge(expirationTime)
             .build();

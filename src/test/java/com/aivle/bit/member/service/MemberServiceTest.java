@@ -59,7 +59,7 @@ class MemberServiceTest {
         @DisplayName("[성공] 유효한 요청으로 회원 가입을 시도하면 회원이 정상적으로 생성된다.")
         void signup_Success() {
             // given
-            when(memberRepository.existsByEmail(memberCreateRequest.email())).thenReturn(false);
+                when(memberRepository.existsByEmailAndIsDeletedFalse(memberCreateRequest.email())).thenReturn(false);
             when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
             doNothing().when(verificationStorage).isEmailVerified(memberCreateRequest.email());
 
@@ -68,7 +68,7 @@ class MemberServiceTest {
 
             // then
             assertNotNull(result);
-            verify(memberRepository, times(1)).existsByEmail(memberCreateRequest.email());
+            verify(memberRepository, times(1)).existsByEmailAndIsDeletedFalse(memberCreateRequest.email());
             verify(memberRepository, times(1)).save(any(Member.class));
             verify(verificationStorage, times(1)).isEmailVerified(memberCreateRequest.email());
         }
@@ -77,7 +77,7 @@ class MemberServiceTest {
         @DisplayName("[예외] 중복된 이메일로 회원 가입을 시도하면 EMAIL_DUPLICATION 예외가 발생한다.")
         void signup_Fail_DuplicateEmail() {
             // given
-            when(memberRepository.existsByEmail(memberCreateRequest.email())).thenReturn(true);
+            when(memberRepository.existsByEmailAndIsDeletedFalse(memberCreateRequest.email())).thenReturn(true);
 
             // when & then
             AivleException exception = assertThrows(AivleException.class,
@@ -86,7 +86,7 @@ class MemberServiceTest {
             assertEquals(EMAIL_DUPLICATION, exception.getErrorCode());
 
             // verify
-            verify(memberRepository, times(1)).existsByEmail(memberCreateRequest.email());
+            verify(memberRepository, times(1)).existsByEmailAndIsDeletedFalse(memberCreateRequest.email());
             verify(memberRepository, never()).save(any(Member.class));
             verify(verificationStorage, never()).isEmailVerified(anyString());
             verifyNoMoreInteractions(memberRepository, verificationStorage);
@@ -98,7 +98,7 @@ class MemberServiceTest {
             // given
             doThrow(new AivleException(EMAIL_NOT_VERIFIED))
                 .when(verificationStorage).isEmailVerified(memberCreateRequest.email());
-            when(memberRepository.existsByEmail(memberCreateRequest.email())).thenReturn(false);
+            when(memberRepository.existsByEmailAndIsDeletedFalse(memberCreateRequest.email())).thenReturn(false);
 
             // when & then
             AivleException exception = assertThrows(AivleException.class,
@@ -109,7 +109,7 @@ class MemberServiceTest {
             // verify
             verify(verificationStorage, times(1)).isEmailVerified(memberCreateRequest.email());
             verify(memberRepository, never()).save(any(Member.class));
-            verify(memberRepository, times(1)).existsByEmail(memberCreateRequest.email());
+            verify(memberRepository, times(1)).existsByEmailAndIsDeletedFalse(memberCreateRequest.email());
             verifyNoMoreInteractions(memberRepository, verificationStorage);
         }
     }
@@ -122,13 +122,13 @@ class MemberServiceTest {
         @DisplayName("[성공] 이메일 중복 체크를 통과")
         void checkEmailDuplicated_Success() {
             // given
-            when(memberRepository.existsByEmail(email)).thenReturn(false);
+            when(memberRepository.existsByEmailAndIsDeletedFalse(email)).thenReturn(false);
 
             // when & then
             assertDoesNotThrow(() -> memberService.checkEmailDuplicated(email));
 
             // verify
-            verify(memberRepository, times(1)).existsByEmail(email);
+            verify(memberRepository, times(1)).existsByEmailAndIsDeletedFalse(email);
             verifyNoMoreInteractions(memberRepository);
         }
 
@@ -136,7 +136,7 @@ class MemberServiceTest {
         @DisplayName("[예외] 중복된 이메일로 회원 가입을 시도하면 EMAIL_DUPLICATION 예외가 발생한다.")
         void checkEmailDuplicated_Fail() {
             // given
-            when(memberRepository.existsByEmail(email)).thenReturn(true);
+            when(memberRepository.existsByEmailAndIsDeletedFalse(email)).thenReturn(true);
 
             // when & then
             AivleException exception = assertThrows(AivleException.class,
@@ -145,7 +145,7 @@ class MemberServiceTest {
             assertEquals(EMAIL_DUPLICATION, exception.getErrorCode());
 
             // verify
-            verify(memberRepository, times(1)).existsByEmail(email);
+            verify(memberRepository, times(1)).existsByEmailAndIsDeletedFalse(email);
             verifyNoMoreInteractions(memberRepository);
         }
     }

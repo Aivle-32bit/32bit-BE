@@ -1,16 +1,16 @@
 package com.aivle.bit.global.smtp;
 
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_APPROVE;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_DORMANT;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_NOTICE;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_REJECT;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_VERIFICATION;
 
-import com.amazonaws.services.simpleemail.model.Body;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType;
+import lombok.Getter;
 
+@Getter
 public class Mail {
-
-    private static final String FROM_EMAIL = "no-reply@aivle.site";
 
     private final String to;
     private final String subject;
@@ -28,26 +28,27 @@ public class Mail {
             EMAIL_VERIFICATION.content(code));
     }
 
-    public SendEmailRequest toSes() {
-        return new SendEmailRequest()
-            .withSource(FROM_EMAIL)
-            .withDestination(generateDestination())
-            .withMessage(generateMessage());
+    public static Mail approve(String to, String name) {
+        return new Mail(to,
+            EMAIL_APPROVE.subject(),
+            EMAIL_APPROVE.content(name));
     }
 
-    private Destination generateDestination() {
-        return new Destination().withToAddresses(to);
+    public static Mail reject(String to, String name, String reason) {
+        return new Mail(to,
+            EMAIL_REJECT.subject(),
+            EMAIL_REJECT.content(name, reason));
     }
 
-    private Message generateMessage() {
-        return new Message()
-            .withSubject(generateContent(subject))
-            .withBody(new Body().withHtml(generateContent(content)));
+    public static Mail dormant(String to, String name) {
+        return new Mail(to,
+            EMAIL_DORMANT.subject(),
+            EMAIL_DORMANT.content(name));
     }
 
-    private Content generateContent(String content) {
-        return new Content()
-            .withCharset("UTF-8")
-            .withData(content);
+    public static Mail notice(String to, String content) {
+        return new Mail(to,
+            EMAIL_NOTICE.subject(),
+            EMAIL_NOTICE.content(content));
     }
 }

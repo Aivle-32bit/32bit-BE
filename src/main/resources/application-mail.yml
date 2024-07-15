@@ -2,7 +2,16 @@ spring:
   config:
     import:
       - classpath:config/application-mail.properties
-ses:
-  credentials:
-    access-key: ${ses.credentials.access-key}
-    secret-key: ${ses.credentials.secret-key}
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:${spring.mail.username}}
+    password: ${MAIL_PASSWORD:${spring.mail.password}}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
