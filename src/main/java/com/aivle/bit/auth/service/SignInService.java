@@ -3,7 +3,6 @@ package com.aivle.bit.auth.service;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_MEMBER;
 
 import com.aivle.bit.auth.dto.request.SignInRequest;
-import com.aivle.bit.auth.dto.response.SignInResponse;
 import com.aivle.bit.auth.dto.response.TokenResponse;
 import com.aivle.bit.auth.jwt.JwtTokenProvider;
 import com.aivle.bit.auth.repository.TokenRepository;
@@ -25,7 +24,7 @@ public class SignInService {
 
     private final TokenRepository tokenRepository;
 
-    public SignInResponse signInUser(SignInRequest signInRequest) {
+    public TokenResponse signInUser(SignInRequest signInRequest) {
         String email = signInRequest.email();
         Member member = memberRepository.findByEmailAndIsDeletedFalse(email)
             .orElseThrow(() -> new AivleException(NO_SEARCH_MEMBER));
@@ -38,7 +37,6 @@ public class SignInService {
         Duration expiryDuration = jwtTokenProvider.getRefreshTokenExpiryDurationFromNow();
         tokenRepository.setValues(email, refreshToken, expiryDuration);
 
-        return SignInResponse.of(TokenResponse.of(accessToken, refreshToken), member.getId(), member.getName(),
-            member.getState(), member.getIsAdmin());
+        return TokenResponse.of(accessToken, refreshToken);
     }
 }

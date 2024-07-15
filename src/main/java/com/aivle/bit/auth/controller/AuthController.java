@@ -1,8 +1,6 @@
 package com.aivle.bit.auth.controller;
 
 import com.aivle.bit.auth.dto.request.SignInRequest;
-import com.aivle.bit.auth.dto.response.SignInResponse;
-import com.aivle.bit.auth.dto.response.SignInResult;
 import com.aivle.bit.auth.dto.response.TokenResponse;
 import com.aivle.bit.auth.service.SignInService;
 import com.aivle.bit.member.domain.Member;
@@ -39,14 +37,12 @@ public class AuthController {
 
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
-    public SignInResult signIn(@RequestBody @Valid SignInRequest signInRequest,
-                               HttpServletResponse response) {
-        SignInResponse signInResponse = signInService.signInUser(signInRequest);
-
-        TokenResponse tokenResponse = signInResponse.tokenResponse();
+    public TokenResponse signIn(@RequestBody @Valid SignInRequest signInRequest,
+                                HttpServletResponse response) {
+        TokenResponse tokenResponse = signInService.signInUser(signInRequest);
         tokenResponse.setAccessToken(response, EXPIRATION_TIME);
 
-        return SignInResult.from(signInResponse);
+        return tokenResponse;
     }
 
     @PostMapping("/sign-up")

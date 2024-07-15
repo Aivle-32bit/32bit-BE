@@ -1,5 +1,6 @@
 package com.aivle.bit.member.controller;
 
+import com.aivle.bit.admin.dto.response.MemberResponse;
 import com.aivle.bit.auth.jwt.AllowUnverifiedUser;
 import com.aivle.bit.company.service.S3Service;
 import com.aivle.bit.member.domain.Member;
@@ -29,6 +30,12 @@ public class MemberController {
 
     private final MemberService memberService;
     private final S3Service s3Service;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public MemberResponse findMember(@AllowUnverifiedUser Member member) {
+        return MemberResponse.from(member);
+    }
 
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
