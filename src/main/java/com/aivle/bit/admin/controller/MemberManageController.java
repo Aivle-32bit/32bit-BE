@@ -64,6 +64,13 @@ public class MemberManageController {
         memberManageService.updateDormant(id);
     }
 
+    @PostMapping("/{id}/unverified")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUnverified(@PathVariable Long id) {
+        log.info("Updating member with ID: {} to unverified", id);
+        memberManageService.updateUnverified(id);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         log.info("Deleting member with ID: {}", id);
