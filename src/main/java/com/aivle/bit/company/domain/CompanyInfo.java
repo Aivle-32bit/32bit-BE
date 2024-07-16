@@ -40,30 +40,28 @@ public class CompanyInfo {
     @Column(nullable = false)
     private int experience;
 
-    @Comment("입사율")
+    @Comment("입사자 수")
     @Column(nullable = false)
-    private double hireRate;
+    private int numHires;
 
-    @Comment("퇴사율")
+    @Comment("퇴사자 수")
     @Column(nullable = false)
-    private double turnoverRate;
+    private int numResignations;
 
     @Comment("회사 정보")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Company company;
 
-    private CompanyInfo(int year, int numEmployees, int experience, double hireRate, double turnoverRate,
-                        Company company) {
+    private CompanyInfo(int year, int numEmployees, int experience, int numHires, int numResignations, Company company) {
         this.year = year;
         this.numEmployees = numEmployees;
         this.experience = experience;
-        this.hireRate = hireRate;
-        this.turnoverRate = turnoverRate;
+        this.numHires = numHires;
+        this.numResignations = numResignations;
         this.company = company;
     }
 
-    public static CompanyInfo of(int year, int numEmployees, int experience, double hireRate, double turnoverRate,
-                                 Company company) {
-        return new CompanyInfo(year, numEmployees, experience, hireRate, turnoverRate, company);
+    public static CompanyInfo of(int year, int numEmployees, int experience, int numHires, int numResignations, Company company) {
+        return new CompanyInfo(year, numEmployees, experience, numHires, numResignations, company);
     }
 }
