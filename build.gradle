@@ -19,61 +19,47 @@ jar {
 
 repositories {
     mavenCentral()
-    dependencies {
+}
 
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        runtimeOnly 'com.mysql:mysql-connector-j'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-        mavenCentral()
-    }
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-    dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        runtimeOnly 'com.mysql:mysql-connector-j'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
+    // Spring Data Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.data:spring-data-redis'
 
-        // Spring Data Redis
-        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-        implementation 'org.springframework.data:spring-data-redis'
-        implementation('com.amazonaws:aws-java-sdk-ses:1.12.757') {
-            exclude group: 'commons-logging', module: 'commons-logging'
-        }
+    // Feign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.1'
 
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-        // Feign
-        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.1'
+    // s3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.583'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
 
-        // jwt
-        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    // retry
+    implementation 'org.springframework.retry:spring-retry:1.3.1'
 
-        // s3
-        implementation 'com.amazonaws:aws-java-sdk-s3:1.12.583'
-        implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-        // retry
-        implementation 'org.springframework.retry:spring-retry:1.3.1'
+    implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
+}
+tasks.named('test') {
+    useJUnitPlatform()
+}
 
-        // mail
-        implementation 'org.springframework.boot:spring-boot-starter-mail'
-    }
-
-    tasks.named('test') {
-        useJUnitPlatform()
-    }
-
-    tasks.withType(Test) {
-        useJUnitPlatform()
-    }
+tasks.withType(Test) {
+    useJUnitPlatform()
 }
