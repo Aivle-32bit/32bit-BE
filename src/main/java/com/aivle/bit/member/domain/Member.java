@@ -13,6 +13,7 @@ import static com.aivle.bit.global.exception.ErrorCode.MEMBER_ALREADY_DELETED;
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
+import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -139,6 +140,20 @@ public class Member extends BaseTimeEntity {
 
         this.password = encode(newPassword);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 
     public void approve() {
         ensureNotDeleted();
