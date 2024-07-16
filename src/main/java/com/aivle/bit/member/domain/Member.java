@@ -213,4 +213,8 @@ public class Member extends BaseTimeEntity {
     private void updateAddress(String address) {
         this.address = address;
     }
+
+    public boolean isAdmin() {
+        return Boolean.TRUE.equals(this.isAdmin);
+    }
 }

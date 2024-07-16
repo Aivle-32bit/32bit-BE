@@ -28,7 +28,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         @NonNull final HttpServletResponse response,
         @NonNull final Object handler
     ) {
-        if (isOptionRequest(request)) {
+        if (isOptionRequest(request) || isNoticePath(request)) {
             return true;
         }
         final String accessToken = jwtTokenExtractor.extractAccessToken(request);
@@ -46,4 +46,8 @@ public class AdminInterceptor implements HandlerInterceptor {
     private boolean isOptionRequest(HttpServletRequest request) {
         return request.getMethod().equals("OPTIONS");
     }
+
+    private boolean isNoticePath(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/API/notice");
+    } // 수정된 부분
 }
