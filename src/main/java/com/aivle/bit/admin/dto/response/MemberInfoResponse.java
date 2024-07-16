@@ -1,5 +1,6 @@
-package com.aivle.bit.auth.dto.response;
+package com.aivle.bit.admin.dto.response;
 
+import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.domain.MemberState;
 import lombok.Getter;
@@ -14,18 +15,18 @@ public class MemberInfoResponse {
     private final String companyName;
     private final Boolean isAdmin;
 
-    private MemberInfoResponse(Long id, String email, String name, MemberState state, String companyName,
+    private MemberInfoResponse(Long id, String email, String name, MemberState state, Company company,
                                Boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.state = state;
-        this.companyName = companyName;
+        this.companyName = (company != null) ? company.getName() : "정보 없음";
         this.isAdmin = isAdmin;
     }
 
     public static MemberInfoResponse from(Member member) {
         return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getState(),
-            member.getCompany().getName(), member.getIsAdmin());
+            member.getCompany(), member.getIsAdmin());
     }
 }
