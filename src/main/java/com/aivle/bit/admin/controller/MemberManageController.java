@@ -1,8 +1,8 @@
 package com.aivle.bit.admin.controller;
 
 import com.aivle.bit.admin.dto.request.RejectRequest;
+import com.aivle.bit.admin.dto.response.MemberInfoResponse;
 import com.aivle.bit.admin.service.MemberManageService;
-import com.aivle.bit.auth.dto.response.MemberInfoResponse;
 import com.aivle.bit.company.dto.response.CompanyRegistrationResponse;
 import com.aivle.bit.member.domain.MemberState;
 import jakarta.validation.Valid;
