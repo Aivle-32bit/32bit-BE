@@ -1,4 +1,4 @@
-가package com.aivle.bit.company.domain;
+package com.aivle.bit.company.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
