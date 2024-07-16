@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties(value = {
 	DiscordProperties.class
 })
+
 @EnableJpaAuditing
 @EnableRetry
 @SpringBootApplication
