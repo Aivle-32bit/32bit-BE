@@ -58,22 +58,22 @@ public class FinancialSummary {
 
     @Comment("매출액")
     @Column(nullable = false)
-    private double salesAmount;
+    private int salesAmount;
 
-    @Comment("순이익")
+    @Comment("당기순이익")
     @Column(nullable = false)
-    private double netIncome;
+    private int netIncome;
 
-    @Comment("총부채")
+    @Comment("부채총액")
     @Column(nullable = false)
-    private double totalLiabilities;
+    private int totalLiabilities;
 
-    @Comment("총자산")
+    @Comment("자산총액")
     @Column(nullable = false)
-    private double totalAssets;
+    private int totalAssets;
 
     private FinancialSummary(int year, Company company, double DEBT, double ATR, double AGR, double ROA, double PPE,
-                             double salesAmount, double netIncome, double totalLiabilities, double totalAssets) {
+                             int salesAmount, int netIncome, int totalLiabilities, int totalAssets) {
         this.year = year;
         this.company = company;
         this.DEBT = DEBT;
@@ -89,8 +89,8 @@ public class FinancialSummary {
 
     public static FinancialSummary of(int year, Company company, double DEBT, double ATR, double AGR, double ROA,
                                       double PPE,
-                                      double salesAmount, double netIncome, double totalLiabilities,
-                                      double totalAssets) {
+                                      int salesAmount, int netIncome, int totalLiabilities,
+                                      int totalAssets) {
         return new FinancialSummary(year, company, DEBT, ATR, AGR, ROA, PPE, salesAmount, netIncome, totalLiabilities,
             totalAssets);
     }
