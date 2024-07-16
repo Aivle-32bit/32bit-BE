@@ -18,11 +18,6 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "swot",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"year", "company_id"})
-    }
-)
 public class Swot {
 
     @Id
