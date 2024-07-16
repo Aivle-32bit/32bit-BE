@@ -1,4 +1,4 @@
-package com.aivle.bit.admin.dto.response;
+package com.aivle.bit.auth.dto.response;
 
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.domain.MemberState;

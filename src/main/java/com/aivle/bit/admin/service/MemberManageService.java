@@ -4,7 +4,8 @@ import static com.aivle.bit.global.exception.ErrorCode.ALREADY_REGISTERED_COMPAN
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_COMPANY_REGISTRATION;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_MEMBER;
 
-import com.aivle.bit.admin.dto.response.MemberResponse;
+import com.aivle.bit.auth.dto.response.MemberInfoResponse;
+import com.aivle.bit.auth.dto.response.MemberResponse;
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.company.domain.CompanyRegistration;
 import com.aivle.bit.company.dto.response.CompanyRegistrationResponse;
@@ -34,13 +35,13 @@ public class MemberManageService {
     private final CompanyRepository companyRepository;
 
     @Transactional(readOnly = true)
-    public List<MemberResponse> findAllMember(MemberState state) {
+    public List<MemberInfoResponse> findAllMember(MemberState state) {
         List<Member> members = (state == null) ?
             memberRepository.findByIsAdminFalseAndIsDeletedFalse() :
             memberRepository.findByIsAdminFalseAndStateAndIsDeletedFalse(state);
 
         return members.stream()
-            .map(MemberResponse::from)
+            .map(MemberInfoResponse::from)
             .toList();
     }
 

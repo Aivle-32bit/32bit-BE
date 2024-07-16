@@ -1,6 +1,6 @@
 package com.aivle.bit.member.controller;
 
-import com.aivle.bit.admin.dto.response.MemberResponse;
+import com.aivle.bit.auth.dto.response.MemberResponse;
 import com.aivle.bit.auth.jwt.AllowUnverifiedUser;
 import com.aivle.bit.company.service.S3Service;
 import com.aivle.bit.member.domain.Member;

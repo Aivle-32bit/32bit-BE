@@ -1,8 +1,8 @@
 package com.aivle.bit.admin.controller;
 
 import com.aivle.bit.admin.dto.request.RejectRequest;
-import com.aivle.bit.admin.dto.response.MemberResponse;
 import com.aivle.bit.admin.service.MemberManageService;
+import com.aivle.bit.auth.dto.response.MemberInfoResponse;
 import com.aivle.bit.company.dto.response.CompanyRegistrationResponse;
 import com.aivle.bit.member.domain.MemberState;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class MemberManageController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MemberResponse> manageUsers(@RequestParam(required = false) MemberState state) {
+    public List<MemberInfoResponse> manageUsers(@RequestParam(required = false) MemberState state) {
         log.info("Fetching members with state: {}", state);
         return memberManageService.findAllMember(state);
     }
