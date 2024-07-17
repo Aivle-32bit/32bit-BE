@@ -49,5 +49,5 @@ public class AdminInterceptor implements HandlerInterceptor {
 
     private boolean isNoticePath(HttpServletRequest request) {
         return request.getRequestURI().startsWith("/API/notice");
-    } // 수정된 부분
+    }
 }

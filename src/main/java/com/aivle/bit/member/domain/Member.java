@@ -220,6 +220,7 @@ public class Member extends BaseTimeEntity {
 
     public boolean isAdmin() {
         return Boolean.TRUE.equals(this.isAdmin);
+    }
 
     public void unverified() {
         this.state = MemberState.UNVERIFIED;
