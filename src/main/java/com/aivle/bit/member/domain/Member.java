@@ -13,7 +13,6 @@ import static com.aivle.bit.global.exception.ErrorCode.MEMBER_ALREADY_DELETED;
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
-import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,6 +23,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
@@ -143,8 +143,12 @@ public class Member extends BaseTimeEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Member member = (Member) o;
         return Objects.equals(id, member.id);
     }
@@ -216,5 +220,8 @@ public class Member extends BaseTimeEntity {
 
     public boolean isAdmin() {
         return Boolean.TRUE.equals(this.isAdmin);
+
+    public void unverified() {
+        this.state = MemberState.UNVERIFIED;
     }
 }

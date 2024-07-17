@@ -154,4 +154,11 @@ public class MemberManageService {
         return companyRegistrationRepository.findFirstByMemberIdOrderByModifiedAtDesc(id)
             .orElseThrow(() -> new AivleException(NO_SEARCH_COMPANY_REGISTRATION));
     }
+
+    public void updateUnverified(Long id) {
+        Member member = findMemberById(id);
+        member.unverified();
+        memberRepository.save(member);
+    }
+
 }
