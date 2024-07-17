@@ -1,7 +1,7 @@
 package com.aivle.bit.notice.admin.service;
 
 import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
-import static com.aivle.bit.global.exception.ErrorCode.POST_NOTFOUND;
+import static com.aivle.bit.global.exception.ErrorCode.POST_NOT_FOUND;
 import static com.aivle.bit.global.utils.ValidationUtil.validateTitleAndContent;
 
 import com.aivle.bit.global.exception.AivleException;
@@ -61,7 +61,7 @@ public class AdminNoticeService {
     @Transactional(readOnly = true)
     public Notice findNoticeForUpdate(Long noticeId) {
         return noticeRepository.findByIdAndIsDeletedFalse(noticeId)
-            .orElseThrow(() -> new AivleException(POST_NOTFOUND));
+            .orElseThrow(() -> new AivleException(POST_NOT_FOUND));
     }
 
     private void validateAdmin(Member member) {

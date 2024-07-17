@@ -3,7 +3,7 @@ package com.aivle.bit.board.service;
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
 import static com.aivle.bit.global.exception.ErrorCode.POST_CANNOT_EDIT;
 import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
-import static com.aivle.bit.global.exception.ErrorCode.POST_NOTFOUND;
+import static com.aivle.bit.global.exception.ErrorCode.POST_NOT_FOUND;
 import static com.aivle.bit.global.utils.ValidationUtil.validateTitleAndContent; // 수정된 부분
 
 import com.aivle.bit.board.domain.Board;
@@ -111,7 +111,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Board findBoardForUpdate(Long boardId, Member member) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
-            .orElseThrow(() -> new AivleException(POST_NOTFOUND));
+            .orElseThrow(() -> new AivleException(POST_NOT_FOUND));
 
         if (!board.canView(member)) {
             throw new AivleException(POST_FORBIDDEN);
