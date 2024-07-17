@@ -218,6 +218,10 @@ public class Member extends BaseTimeEntity {
         this.address = address;
     }
 
+    public boolean isAdmin() {
+        return Boolean.TRUE.equals(this.isAdmin);
+    }
+
     public void unverified() {
         this.state = MemberState.UNVERIFIED;
     }
