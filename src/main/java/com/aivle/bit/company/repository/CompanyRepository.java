@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
-    Boolean existsByName(String name);
-
     Page<Company> findAllByIsDeletedFalse(Pageable pageable);
 
     Optional<Company> findByIdAndIsDeletedFalse(Long id);
+
+    Optional<Company> findByNameAndIsDeletedFalse(String companyName);
 }
