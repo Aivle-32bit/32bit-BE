@@ -1,6 +1,6 @@
 package com.aivle.bit.global.utils;
 
-import static com.aivle.bit.global.exception.ErrorCode.SHA256AlgorithmNotFoundException;
+import static com.aivle.bit.global.exception.ErrorCode.SHA256_ALGORITHM_NOT_FOUND;
 import static org.apache.commons.codec.digest.MessageDigestAlgorithms.SHA_256;
 
 import com.aivle.bit.global.exception.AivleException;
@@ -21,7 +21,7 @@ public class HashRandomGenerator implements RandomGenerator {
 
             return byteArrayToString(encodedhash);
         } catch (NoSuchAlgorithmException e) {
-            throw new AivleException(SHA256AlgorithmNotFoundException);
+            throw new AivleException(SHA256_ALGORITHM_NOT_FOUND);
         }
     }
 
