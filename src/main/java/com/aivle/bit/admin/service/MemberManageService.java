@@ -1,12 +1,12 @@
 package com.aivle.bit.admin.service;
 
-import static com.aivle.bit.global.exception.ErrorCode.ALREADY_REGISTERED_COMPANY;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_COMPANY_REGISTRATION;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_MEMBER;
 
 import com.aivle.bit.admin.dto.response.MemberInfoResponse;
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.company.domain.CompanyRegistration;
+import com.aivle.bit.company.domain.VerificationStatus;
 import com.aivle.bit.company.dto.response.CompanyRegistrationResponse;
 import com.aivle.bit.company.repository.CompanyRegistrationRepository;
 import com.aivle.bit.company.repository.CompanyRepository;
@@ -111,11 +111,9 @@ public class MemberManageService {
     }
 
     private Company createAndSaveCompany(CompanyRegistration registration) {
-        if (companyRepository.existsByName(registration.getCompanyName())) {
-            throw new AivleException(ALREADY_REGISTERED_COMPANY);
-        }
-        Company company = Company.of(registration.getCompanyName(), registration.getBusinessType());
-        return companyRepository.save(company);
+        return companyRepository.findByNameAndIsDeletedFalse(registration.getCompanyName())
+            .orElseGet(() -> companyRepository.save(
+                Company.of(registration.getCompanyName(), registration.getBusinessType())));
     }
 
     private void updateMemberWithCompany(Long memberId, Company company) {
@@ -151,7 +149,8 @@ public class MemberManageService {
     }
 
     private CompanyRegistration findLatestRegistrationByMemberId(Long id) {
-        return companyRegistrationRepository.findFirstByMemberIdOrderByModifiedAtDesc(id)
+        return companyRegistrationRepository.findFirstByMemberIdAndVerificationStatusOrderByModifiedAtDesc(id,
+                VerificationStatus.PENDING)
             .orElseThrow(() -> new AivleException(NO_SEARCH_COMPANY_REGISTRATION));
     }
 
@@ -160,5 +159,4 @@ public class MemberManageService {
         member.unverified();
         memberRepository.save(member);
     }
-
 }

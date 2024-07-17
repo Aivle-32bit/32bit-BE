@@ -174,6 +174,7 @@ public class Member extends BaseTimeEntity {
 
     public void dormant() {
         ensureNotDeleted();
+        this.company = null;
         this.state = MemberState.USER_DORMANT;
     }
 

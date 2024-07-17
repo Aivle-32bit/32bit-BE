@@ -1,6 +1,7 @@
 package com.aivle.bit.company.repository;
 
 import com.aivle.bit.company.domain.CompanyRegistration;
+import com.aivle.bit.company.domain.VerificationStatus;
 import com.aivle.bit.member.domain.Member;
 import java.util.List;
 import java.util.Optional;
@@ -17,5 +18,5 @@ public interface CompanyRegistrationRepository extends JpaRepository<CompanyRegi
 
     Optional<CompanyRegistration> findByRegistrationId(UUID uuid);
 
-    Optional<CompanyRegistration> findFirstByMemberIdOrderByModifiedAtDesc(Long id);
+    Optional<CompanyRegistration> findFirstByMemberIdAndVerificationStatusOrderByModifiedAtDesc(Long id, VerificationStatus verificationStatus);
 }
