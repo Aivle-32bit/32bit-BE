@@ -1,12 +1,10 @@
 package com.aivle.bit.board.service;
 
-import static com.aivle.bit.global.exception.ErrorCode.CONTENT_REQUIRED;
-import static com.aivle.bit.global.exception.ErrorCode.INVALID_INPUT_VALUE;
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
 import static com.aivle.bit.global.exception.ErrorCode.POST_CANNOT_EDIT;
 import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
 import static com.aivle.bit.global.exception.ErrorCode.POST_NOTFOUND;
-import static com.aivle.bit.global.exception.ErrorCode.TITLE_REQUIRED;
+import static com.aivle.bit.global.utils.ValidationUtil.validateTitleAndContent; // 수정된 부분
 
 import com.aivle.bit.board.domain.Board;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
@@ -31,7 +29,7 @@ public class BoardService {
     @Transactional
     public Board createBoard(Member member, BoardCreateRequest boardCreateRequest) {
         validateMember(member);
-        validateBoardRequest(boardCreateRequest.title(), boardCreateRequest.content());
+        validateTitleAndContent(boardCreateRequest.title(), boardCreateRequest.content()); // 수정된 부분
 
         Boolean isSecret = Optional.ofNullable(boardCreateRequest.isSecret()).orElse(false);
 
@@ -43,7 +41,7 @@ public class BoardService {
     @Transactional
     public Board updateBoard(Member member, Long boardId, BoardUpdateRequest boardUpdateRequest) {
         validateMember(member);
-        validateBoardRequest(boardUpdateRequest.title(), boardUpdateRequest.content());
+        validateTitleAndContent(boardUpdateRequest.title(), boardUpdateRequest.content()); // 수정된 부분
 
         Board board = findBoardForUpdate(boardId, member);
         if (board.getParentId() != null) {
@@ -70,23 +68,11 @@ public class BoardService {
         }
     }
 
-    private void validateBoardRequest(String title, String content) {
-        if ((title == null || title.isBlank()) && (content == null || content.isBlank())) {
-            throw new AivleException(INVALID_INPUT_VALUE);
-        }
-        if (title == null || title.isBlank()) {
-            throw new AivleException(TITLE_REQUIRED);
-        }
-        if (content == null || content.isBlank()) {
-            throw new AivleException(CONTENT_REQUIRED);
-        }
-    }
-
     @Transactional(readOnly = true)
     public List<BoardReadResponse> findAll(Pageable pageable) {
         return boardRepository.findByIsDeletedFalse(pageable).getContent()
             .stream()
-            .map(board -> BoardReadResponse.from(board, board.getMember())) // 반환 형식 변경
+            .map(board -> BoardReadResponse.from(board, board.getMember()))
             .toList();
     }
 
@@ -118,7 +104,7 @@ public class BoardService {
         return boardRepository.findAllByMemberId(member.getId())
             .stream()
             .filter(board -> !board.isDeleted())
-            .map(board -> BoardReadResponse.from(board, board.getMember())) // 반환 형식 변경
+            .map(board -> BoardReadResponse.from(board, board.getMember()))
             .toList();
     }
 
