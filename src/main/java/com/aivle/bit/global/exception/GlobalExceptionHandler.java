@@ -54,4 +54,5 @@ public class GlobalExceptionHandler {
         log.error("UnExpectedException: {}", exception.getMessage());
         return ErrorResponse.from(SERVER_ERROR);
     }
+
 }

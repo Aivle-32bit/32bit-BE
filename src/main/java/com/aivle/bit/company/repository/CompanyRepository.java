@@ -1,6 +1,7 @@
 package com.aivle.bit.company.repository;
 
 import com.aivle.bit.company.domain.Company;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     Optional<Company> findByIdAndIsDeletedFalse(Long id);
 
     Optional<Company> findByNameAndIsDeletedFalse(String companyName);
+
+    List<Company> findByNameContainingIgnoreCase(String name);
 }
