@@ -80,7 +80,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BoardReadResponse> findBoardByTitle(String title, Pageable pageable) {
+    public Page<BoardListResponse> findBoardByTitle(String title, Pageable pageable) {
         Page<Board> boardsPage = boardRepository.findByTitleContainingAndIsDeletedFalseOrderByCreatedAtDesc(title, pageable);
         List<BoardReadResponse> boardResponses = boardsPage.getContent().stream()
             .map(BoardReadResponse::from)
@@ -90,7 +90,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BoardReadResponse> findMyBoard(Member member, Pageable pageable) {
+    public Page<BoardListResponse> findMyBoard(Member member, Pageable pageable) {
         Page<Board> boardsPage = boardRepository.findAllByMemberIdAndIsDeletedFalseOrderByCreatedAtDesc(member.getId(), pageable);
         List<BoardReadResponse> boardResponses = boardsPage.getContent().stream()
             .map(BoardReadResponse::from)
