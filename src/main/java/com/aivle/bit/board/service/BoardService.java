@@ -73,7 +73,7 @@ public class BoardService {
     public Page<BoardListResponse> findAll(Pageable pageable) {
         Page<Board> boardsPage = boardRepository.findByIsDeletedFalseOrderByCreatedAtDesc(pageable);
         List<BoardListResponse> boardResponses = boardsPage.getContent().stream()
-            .map(board -> BoardListResponse.of(board, board.getMember()))
+            .map(BoardListResponse::from)
             .toList();
 
         return new PageImpl<>(boardResponses, pageable, boardsPage.getTotalElements());
@@ -82,8 +82,8 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Page<BoardListResponse> findBoardByTitle(String title, Pageable pageable) {
         Page<Board> boardsPage = boardRepository.findByTitleContainingAndIsDeletedFalseOrderByCreatedAtDesc(title, pageable);
-        List<BoardReadResponse> boardResponses = boardsPage.getContent().stream()
-            .map(BoardReadResponse::from)
+        List<BoardListResponse> boardResponses = boardsPage.getContent().stream()
+            .map(BoardListResponse::from)
             .toList();
 
         return new PageImpl<>(boardResponses, pageable, boardsPage.getTotalElements());
@@ -92,8 +92,8 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Page<BoardListResponse> findMyBoard(Member member, Pageable pageable) {
         Page<Board> boardsPage = boardRepository.findAllByMemberIdAndIsDeletedFalseOrderByCreatedAtDesc(member.getId(), pageable);
-        List<BoardReadResponse> boardResponses = boardsPage.getContent().stream()
-            .map(BoardReadResponse::from)
+        List<BoardListResponse> boardResponses = boardsPage.getContent().stream()
+            .map(BoardListResponse::from)
             .toList();
 
         return new PageImpl<>(boardResponses, pageable, boardsPage.getTotalElements());

@@ -34,15 +34,15 @@ public class BoardListResponse {
         this.createdAt = createdAt;
     }
 
-    public static BoardListResponse of(final Board board, Member member) {
+    public static BoardListResponse from(final Board board) {
         return new BoardListResponse(
             board.getId(),
             board.getParentId(),
             board.getTitle(),
             board.getContent(),
             board.getViewCount(),
-            member.getId(),
-            member.getName(),
+            board.getMember().getId(),
+            board.getMember().getName(),
             board.getIsSecret(),
             board.getCreatedAt()
         );
