@@ -16,6 +16,8 @@ import com.aivle.bit.member.domain.Member;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +31,7 @@ public class BoardService {
     @Transactional
     public Board createBoard(Member member, BoardCreateRequest boardCreateRequest) {
         validateMember(member);
-        validateTitleAndContent(boardCreateRequest.title(), boardCreateRequest.content()); // 수정된 부분
+        validateTitleAndContent(boardCreateRequest.title(), boardCreateRequest.content());
 
         Boolean isSecret = Optional.ofNullable(boardCreateRequest.isSecret()).orElse(false);
 
@@ -41,7 +43,7 @@ public class BoardService {
     @Transactional
     public Board updateBoard(Member member, Long boardId, BoardUpdateRequest boardUpdateRequest) {
         validateMember(member);
-        validateTitleAndContent(boardUpdateRequest.title(), boardUpdateRequest.content()); // 수정된 부분
+        validateTitleAndContent(boardUpdateRequest.title(), boardUpdateRequest.content());
 
         Board board = findBoardForUpdate(boardId, member);
         if (board.getParentId() != null) {
@@ -52,7 +54,7 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
-
+    @Transactional
     public void deleteBoard(Member member, Long boardId) {
         Board board = findBoardForUpdate(boardId, member);
 
@@ -61,7 +63,6 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-
     private void validateMember(Member member) {
         if (member == null) {
             throw new AivleException(INVALID_REQUEST);
@@ -69,40 +70,33 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardListResponse> findAll(Pageable pageable) {
-        return boardRepository.findByIsDeletedFalseOrderByCreatedAtDesc(pageable).getContent()
-            .stream()
+    public Page<BoardListResponse> findAll(Pageable pageable) {
+        Page<Board> boardsPage = boardRepository.findByIsDeletedFalseOrderByCreatedAtDesc(pageable);
+        List<BoardListResponse> boardResponses = boardsPage.getContent().stream()
             .map(board -> BoardListResponse.of(board, board.getMember()))
             .toList();
-    }
 
-
-    @Transactional(readOnly = true)
-    public List<BoardReadResponse> findBoardByTitle(String title) {
-        return boardRepository.findByTitleContaining(title)
-            .stream()
-            .filter(board -> !board.isDeleted())
-            .sorted((b1, b2) -> {
-                int frequencyComparison = Integer.compare(
-                    (int) b2.getTitle().toLowerCase().chars().filter(ch -> ch == title.toLowerCase().charAt(0)).count(),
-                    (int) b1.getTitle().toLowerCase().chars().filter(ch -> ch == title.toLowerCase().charAt(0)).count()
-                );
-                if (frequencyComparison == 0) {
-                    return b2.getCreatedAt().compareTo(b1.getCreatedAt());
-                }
-                return frequencyComparison;
-            })
-            .map(board -> BoardReadResponse.of(board, board.getMember()))
-            .toList();
+        return new PageImpl<>(boardResponses, pageable, boardsPage.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public List<BoardReadResponse> findMyBoard(Member member) {
-        return boardRepository.findAllByMemberId(member.getId())
-            .stream()
-            .filter(board -> !board.isDeleted())
+    public Page<BoardReadResponse> findBoardByTitle(String title, Pageable pageable) {
+        Page<Board> boardsPage = boardRepository.findByTitleContainingAndIsDeletedFalseOrderByCreatedAtDesc(title, pageable);
+        List<BoardReadResponse> boardResponses = boardsPage.getContent().stream()
             .map(board -> BoardReadResponse.of(board, board.getMember()))
             .toList();
+
+        return new PageImpl<>(boardResponses, pageable, boardsPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BoardReadResponse> findMyBoard(Member member, Pageable pageable) {
+        Page<Board> boardsPage = boardRepository.findAllByMemberIdAndIsDeletedFalseOrderByCreatedAtDesc(member.getId(), pageable);
+        List<BoardReadResponse> boardResponses = boardsPage.getContent().stream()
+            .map(board -> BoardReadResponse.of(board, board.getMember()))
+            .toList();
+
+        return new PageImpl<>(boardResponses, pageable, boardsPage.getTotalElements());
     }
 
     @Transactional(readOnly = true)

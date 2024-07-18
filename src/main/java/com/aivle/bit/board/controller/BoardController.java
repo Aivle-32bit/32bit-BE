@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,22 +71,22 @@ public class BoardController {
     @Comment("글 목록")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardListResponse> findAll(Pageable pageable) {
+    public Page<BoardListResponse> findAll(Pageable pageable) {
         return boardService.findAll(pageable);
     }
 
     @Comment("제목으로 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title) {
-        return boardService.findBoardByTitle(title);
+    public Page<BoardReadResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title, Pageable pageable) {
+        return boardService.findBoardByTitle(title, pageable);
     }
 
     @Comment("내가 쓴 게시글 조회")
     @GetMapping("/my_boards")
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadResponse> findMyBoard(@JwtLogin Member member) {
-        return boardService.findMyBoard(member);
+    public Page<BoardReadResponse> findMyBoard(@JwtLogin Member member, Pageable pageable) {
+        return boardService.findMyBoard(member, pageable);
     }
 
 }
