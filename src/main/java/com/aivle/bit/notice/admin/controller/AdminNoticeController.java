@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin/notice")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AdminNoticeController {
 
     private final AdminNoticeService noticeService;
 
     @Comment("공지사항 등록")
-    @PostMapping
+    @PostMapping("/admin/notice")
     @ResponseStatus(HttpStatus.CREATED)
     public NoticeReadResponse createNotice(@JwtLogin Member member,
                                            @RequestBody NoticeCreateRequest noticeCreateRequest) {
@@ -37,7 +37,7 @@ public class AdminNoticeController {
     }
 
     @Comment("공지사항 수정")
-    @PutMapping("/{noticeId}")
+    @PutMapping("/admin/notice/{noticeId}")
     @ResponseStatus(HttpStatus.OK)
     public NoticeReadResponse updateNotice(@JwtLogin Member member, @PathVariable Long noticeId,
                                            @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
@@ -45,14 +45,14 @@ public class AdminNoticeController {
     }
 
     @Comment("공지사항 삭제")
-    @DeleteMapping("/{noticeId}")
+    @DeleteMapping("/admin/notice/{noticeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteNotice(@JwtLogin Member member, @PathVariable Long noticeId) {
         noticeService.deleteNotice(member, noticeId);
     }
 
     @Comment("공지사항 목록")
-    @GetMapping
+    @GetMapping("/notice")
     @ResponseStatus(HttpStatus.OK)
     public List<NoticeReadResponse> findNoticeAll(Pageable pageable) {
         return noticeService.findNoticeAll(pageable);
