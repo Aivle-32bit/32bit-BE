@@ -26,4 +26,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     long countByCreatedAtAfter(LocalDateTime createdAt);
 
     Optional<Member> findByCompanyId(Long id);
+
+    Optional<Member> findByNameAndAddressAndIsDeletedFalse(String name, String address);
 }

@@ -2,12 +2,14 @@ package com.aivle.bit.member.service;
 
 import static com.aivle.bit.global.exception.ErrorCode.EMAIL_DUPLICATION;
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
+import static com.aivle.bit.global.exception.ErrorCode.NOT_FOUND_MEMBER;
 
+import com.aivle.bit.auth.dto.request.FindEmailRequest;
+import com.aivle.bit.auth.dto.request.FindPasswordRequest;
 import com.aivle.bit.company.service.S3Service;
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.global.smtp.VerificationStorage;
 import com.aivle.bit.member.domain.Member;
-import com.aivle.bit.member.dto.request.FindPasswordRequest;
 import com.aivle.bit.member.dto.request.MemberCreateRequest;
 import com.aivle.bit.member.dto.request.PasswordChangeRequest;
 import com.aivle.bit.member.dto.request.ProfileUpdateRequest;
@@ -83,5 +85,12 @@ public class MemberService {
         String newPassword = member.resetPassword();
         sendRandomPasswordService.send(member.getEmail(), newPassword);
         memberRepository.save(member);
+    }
+
+    public String findEmail(FindEmailRequest request) {
+        Member member = memberRepository.findByNameAndAddressAndIsDeletedFalse(request.name(), request.address())
+            .orElseThrow(() -> new AivleException(NOT_FOUND_MEMBER));
+
+        return member.getEmail();
     }
 }
