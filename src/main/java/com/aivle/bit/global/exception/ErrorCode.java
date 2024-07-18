@@ -47,6 +47,7 @@ public enum ErrorCode {
     INVALID_METRICS(BAD_REQUEST, "유효하지 않은 지표입니다."),
     NOT_SUPPORT_API(BAD_REQUEST, "지원하지 않는 API입니다."),
     NOT_FOUND_MEMBER(BAD_REQUEST, "회원을 찾을 수 없습니다."),
+    INVALID_REPLY_REQUEST(BAD_REQUEST, "잘못된 답글 요청입니다."),
 
     // 401 Unauthorized
     INVALID_TOKEN_EXTRACTOR(UNAUTHORIZED, "토큰 추출에 실패했습니다."),

@@ -1,16 +1,17 @@
 package com.aivle.bit.board.controller;
 
 
+import com.aivle.bit.auth.jwt.Admin;
 import com.aivle.bit.auth.jwt.JwtLogin;
 import com.aivle.bit.board.domain.Board;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
 import com.aivle.bit.board.dto.request.BoardUpdateRequest;
+import com.aivle.bit.board.dto.request.ReplyCreateRequest;
 import com.aivle.bit.board.dto.response.BoardListResponse;
 import com.aivle.bit.board.dto.response.BoardReadResponse;
 import com.aivle.bit.board.service.BoardService;
 import com.aivle.bit.member.domain.Member;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.domain.Page;
@@ -78,7 +79,8 @@ public class BoardController {
     @Comment("제목으로 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public Page<BoardListResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title, Pageable pageable) {
+    public Page<BoardListResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title,
+                                                    Pageable pageable) {
         return boardService.findBoardByTitle(title, pageable);
     }
 
@@ -87,6 +89,15 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public Page<BoardListResponse> findMyBoard(@JwtLogin Member member, Pageable pageable) {
         return boardService.findMyBoard(member, pageable);
+    }
+
+    @Comment("게시글 답글 작성")
+    @PostMapping("/{boardId}/reply")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BoardReadResponse createReply(@PathVariable Long boardId, @RequestBody ReplyCreateRequest replyCreateRequest,
+                                         @Admin Member member) {
+        Board board = boardService.createReply(boardId, member, replyCreateRequest);
+        return BoardReadResponse.from(board);
     }
 
 }
