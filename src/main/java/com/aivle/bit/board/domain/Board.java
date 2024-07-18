@@ -96,6 +96,12 @@ public class Board extends BaseTimeEntity {
 
 
     public void isAuthor(Member member) {
+        boolean isAdmin = member.getIsAdmin();
+
+        if (isAdmin) {
+            return;
+        }
+
         if (!this.member.getId().equals(member.getId())) {
             throw new AivleException(BOARD_AUTHOR_ONLY_EXCEPTION);
         }
@@ -110,10 +116,17 @@ public class Board extends BaseTimeEntity {
             return;
         }
 
-        if (isSameMember || !isAdmin) {
-            throw new AivleException(POST_FORBIDDEN);
+        if (isAdmin) {
+            return;
         }
+
+        if (isSameMember) {
+            return;
+        }
+
+        throw new AivleException(POST_FORBIDDEN);
     }
+
 
     public boolean isDeleted() {
         return this.isDeleted;
