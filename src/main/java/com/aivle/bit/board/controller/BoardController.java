@@ -5,9 +5,11 @@ import com.aivle.bit.auth.jwt.JwtLogin;
 import com.aivle.bit.board.domain.Board;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
 import com.aivle.bit.board.dto.request.BoardUpdateRequest;
+import com.aivle.bit.board.dto.response.BoardListResponse;
 import com.aivle.bit.board.dto.response.BoardReadResponse;
 import com.aivle.bit.board.service.BoardService;
 import com.aivle.bit.member.domain.Member;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -36,9 +38,9 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BoardReadResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest,
-    @JwtLogin Member member) {
+                                         @JwtLogin Member member) {
         Board board = boardService.createBoard(member, boardCreateRequest);
-        return BoardReadResponse.from(board, member);
+        return BoardReadResponse.of(board, member);
     }
 
     @Comment("게시글 수정")
@@ -47,7 +49,7 @@ public class BoardController {
     public BoardReadResponse updateBoard(@JwtLogin Member member, @PathVariable Long boardId,
                                          @RequestBody BoardUpdateRequest boardUpdateRequest) {
         Board updatedBoard = boardService.updateBoard(member, boardId, boardUpdateRequest);
-        return BoardReadResponse.from(updatedBoard, member);
+        return BoardReadResponse.of(updatedBoard, member);
     }
 
     @Comment("게시글 삭제")
@@ -62,20 +64,20 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public BoardReadResponse findBoard(@PathVariable Long boardId, @JwtLogin Member member) {
         Board board = boardService.findBoardForUpdate(boardId, member);
-        return BoardReadResponse.from(board, member);
+        return BoardReadResponse.of(board, member);
     }
 
     @Comment("글 목록")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadResponse> findAll(Pageable pageable) {
+    public List<BoardListResponse> findAll(Pageable pageable) {
         return boardService.findAll(pageable);
     }
 
     @Comment("제목으로 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadResponse> findBoardByTitle(@RequestParam String title) {
+    public List<BoardReadResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title) {
         return boardService.findBoardByTitle(title);
     }
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    Page<Board> findByIsDeletedFalse(Pageable pageable);
+    Page<Board> findByIsDeletedFalseOrderByCreatedAtDesc(Pageable pageable);
 
     List<Board> findByTitleContaining(String title);
 

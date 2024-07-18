@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class BoardReadResponse {
+public class BoardListResponse {
 
     private Long boardId;
     private String title;
@@ -19,7 +19,7 @@ public class BoardReadResponse {
     private Boolean isSecret;
     private LocalDateTime createdAt;
 
-    public BoardReadResponse(final Long boardId, final String title, final String content,
+    public BoardListResponse(final Long boardId, final String title, final String content,
                              final int viewCount, final Long memberId, final String memberName, final Boolean isSecret,
                              final LocalDateTime createdAt) {
         this.boardId = boardId;
@@ -32,8 +32,8 @@ public class BoardReadResponse {
         this.createdAt = createdAt;
     }
 
-    public static BoardReadResponse of(final Board board, Member member) {
-        return new BoardReadResponse(
+    public static BoardListResponse of(final Board board, Member member) {
+        return new BoardListResponse(
             board.getId(),
             board.getTitle(),
             board.getContent(),

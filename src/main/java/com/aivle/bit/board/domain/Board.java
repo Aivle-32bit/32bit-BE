@@ -100,8 +100,14 @@ public class Board extends BaseTimeEntity {
         }
     }
 
-    public boolean canView(Member member) {
-        return !this.isSecret || this.member.equals(member);
+    public void canView(Member member) {
+        boolean isSameMember = this.member.getId().equals(member.getId());
+        boolean isSecret = this.isSecret;
+        boolean isAdmin = this.member.getIsAdmin();
+
+        if ((!isSameMember && !isSecret) || !isAdmin) {
+            throw new AivleException(BOARD_AUTHOR_ONLY_EXCEPTION);
+        }
     }
 
     public boolean isDeleted() {

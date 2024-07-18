@@ -2,13 +2,13 @@ package com.aivle.bit.board.service;
 
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
 import static com.aivle.bit.global.exception.ErrorCode.POST_CANNOT_EDIT;
-import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
 import static com.aivle.bit.global.exception.ErrorCode.POST_NOT_FOUND;
-import static com.aivle.bit.global.utils.ValidationUtil.validateTitleAndContent; // 수정된 부분
+import static com.aivle.bit.global.utils.ValidationUtil.validateTitleAndContent;
 
 import com.aivle.bit.board.domain.Board;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
 import com.aivle.bit.board.dto.request.BoardUpdateRequest;
+import com.aivle.bit.board.dto.response.BoardListResponse;
 import com.aivle.bit.board.dto.response.BoardReadResponse;
 import com.aivle.bit.board.repository.BoardRepository;
 import com.aivle.bit.global.exception.AivleException;
@@ -69,19 +69,16 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardReadResponse> findAll(Pageable pageable) {
-        return boardRepository.findByIsDeletedFalse(pageable).getContent()
+    public List<BoardListResponse> findAll(Pageable pageable) {
+        return boardRepository.findByIsDeletedFalseOrderByCreatedAtDesc(pageable).getContent()
             .stream()
-            .map(board -> BoardReadResponse.from(board, board.getMember()))
+            .map(board -> BoardListResponse.of(board, board.getMember()))
             .toList();
     }
 
 
     @Transactional(readOnly = true)
     public List<BoardReadResponse> findBoardByTitle(String title) {
-        if (title == null || title.isBlank()) {
-            return List.of();
-        }
         return boardRepository.findByTitleContaining(title)
             .stream()
             .filter(board -> !board.isDeleted())
@@ -95,7 +92,7 @@ public class BoardService {
                 }
                 return frequencyComparison;
             })
-            .map(board -> BoardReadResponse.from(board, board.getMember()))
+            .map(board -> BoardReadResponse.of(board, board.getMember()))
             .toList();
     }
 
@@ -104,7 +101,7 @@ public class BoardService {
         return boardRepository.findAllByMemberId(member.getId())
             .stream()
             .filter(board -> !board.isDeleted())
-            .map(board -> BoardReadResponse.from(board, board.getMember()))
+            .map(board -> BoardReadResponse.of(board, board.getMember()))
             .toList();
     }
 
@@ -113,13 +110,10 @@ public class BoardService {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
             .orElseThrow(() -> new AivleException(POST_NOT_FOUND));
 
-        if (!board.canView(member)) {
-            throw new AivleException(POST_FORBIDDEN);
-        }
+        board.canView(member);
 
         board.incrementViewCount();
         boardRepository.save(board);
         return board;
     }
-
 }
