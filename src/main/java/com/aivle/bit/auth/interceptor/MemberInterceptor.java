@@ -22,7 +22,7 @@ public class MemberInterceptor implements HandlerInterceptor {
         @NonNull final HttpServletResponse response,
         @NonNull final Object handler
     ) {
-        if (isOptionRequest(request) || isNoticePath(request)) {
+        if (isOptionRequest(request)) {
             return true;
         }
         final String accessToken = jwtTokenExtractor.extractAccessToken(request);
@@ -33,5 +33,4 @@ public class MemberInterceptor implements HandlerInterceptor {
     private boolean isOptionRequest(HttpServletRequest request) {
         return request.getMethod().equals("OPTIONS");
     }
-    private boolean isNoticePath(HttpServletRequest request) { return request.getRequestURI().startsWith("/API/notice");}
 }
