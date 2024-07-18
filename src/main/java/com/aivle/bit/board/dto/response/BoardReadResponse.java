@@ -1,7 +1,6 @@
 package com.aivle.bit.board.dto.response;
 
 import com.aivle.bit.board.domain.Board;
-import com.aivle.bit.member.domain.Member;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +31,14 @@ public class BoardReadResponse {
         this.createdAt = createdAt;
     }
 
-    public static BoardReadResponse of(final Board board, Member member) {
+    public static BoardReadResponse from(final Board board) {
         return new BoardReadResponse(
             board.getId(),
             board.getTitle(),
             board.getContent(),
             board.getViewCount(),
-            member.getId(),
-            member.getName(),
+            board.getMember().getId(),
+            board.getMember().getName(),
             board.getIsSecret(),
             board.getCreatedAt()
         );

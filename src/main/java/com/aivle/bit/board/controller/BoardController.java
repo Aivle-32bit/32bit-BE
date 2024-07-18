@@ -41,7 +41,7 @@ public class BoardController {
     public BoardReadResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest,
                                          @JwtLogin Member member) {
         Board board = boardService.createBoard(member, boardCreateRequest);
-        return BoardReadResponse.of(board, member);
+        return BoardReadResponse.from(board);
     }
 
     @Comment("게시글 수정")
@@ -50,7 +50,7 @@ public class BoardController {
     public BoardReadResponse updateBoard(@JwtLogin Member member, @PathVariable Long boardId,
                                          @RequestBody BoardUpdateRequest boardUpdateRequest) {
         Board updatedBoard = boardService.updateBoard(member, boardId, boardUpdateRequest);
-        return BoardReadResponse.of(updatedBoard, member);
+        return BoardReadResponse.from(updatedBoard);
     }
 
     @Comment("게시글 삭제")
@@ -65,7 +65,7 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public BoardReadResponse findBoard(@PathVariable Long boardId, @JwtLogin Member member) {
         Board board = boardService.findBoardForUpdate(boardId, member);
-        return BoardReadResponse.of(board, member);
+        return BoardReadResponse.from(board);
     }
 
     @Comment("글 목록")
