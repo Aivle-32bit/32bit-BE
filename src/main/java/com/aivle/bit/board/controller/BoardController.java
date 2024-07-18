@@ -78,14 +78,14 @@ public class BoardController {
     @Comment("제목으로 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public Page<BoardReadResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title, Pageable pageable) {
+    public Page<BoardListResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title, Pageable pageable) {
         return boardService.findBoardByTitle(title, pageable);
     }
 
     @Comment("내가 쓴 게시글 조회")
     @GetMapping("/my_boards")
     @ResponseStatus(HttpStatus.OK)
-    public Page<BoardReadResponse> findMyBoard(@JwtLogin Member member, Pageable pageable) {
+    public Page<BoardListResponse> findMyBoard(@JwtLogin Member member, Pageable pageable) {
         return boardService.findMyBoard(member, pageable);
     }
 
