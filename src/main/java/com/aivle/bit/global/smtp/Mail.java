@@ -7,7 +7,6 @@ import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_RANDOM_
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_REJECT;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_VERIFICATION;
 
-import com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType;
 import lombok.Getter;
 
 @Getter
