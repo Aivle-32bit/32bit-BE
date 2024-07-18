@@ -99,7 +99,7 @@ public class BoardService {
         return new PageImpl<>(boardResponses, pageable, boardsPage.getTotalElements());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Board findBoardForUpdate(Long boardId, Member member) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
             .orElseThrow(() -> new AivleException(POST_NOT_FOUND));
