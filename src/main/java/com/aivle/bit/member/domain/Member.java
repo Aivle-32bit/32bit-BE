@@ -13,6 +13,7 @@ import static com.aivle.bit.global.exception.ErrorCode.MEMBER_ALREADY_DELETED;
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
+import com.aivle.bit.global.utils.PasswordUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -225,5 +226,11 @@ public class Member extends BaseTimeEntity {
 
     public void unverified() {
         this.state = MemberState.UNVERIFIED;
+    }
+
+    public String resetPassword() {
+        String newPassword = PasswordUtil.generateRandomPassword();
+        this.password = encode(newPassword);
+        return newPassword;
     }
 }

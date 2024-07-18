@@ -4,6 +4,7 @@ import com.aivle.bit.auth.dto.response.MemberResponse;
 import com.aivle.bit.auth.jwt.AllowUnverifiedUser;
 import com.aivle.bit.company.service.S3Service;
 import com.aivle.bit.member.domain.Member;
+import com.aivle.bit.member.dto.request.FindPasswordRequest;
 import com.aivle.bit.member.dto.request.PasswordChangeRequest;
 import com.aivle.bit.member.dto.request.ProfileUpdateRequest;
 import com.aivle.bit.member.dto.response.MemberFindResponse;

@@ -7,6 +7,7 @@ import com.aivle.bit.company.service.S3Service;
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.global.smtp.VerificationStorage;
 import com.aivle.bit.member.domain.Member;
+import com.aivle.bit.member.dto.request.FindPasswordRequest;
 import com.aivle.bit.member.dto.request.MemberCreateRequest;
 import com.aivle.bit.member.dto.request.PasswordChangeRequest;
 import com.aivle.bit.member.dto.request.ProfileUpdateRequest;
@@ -23,6 +24,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final VerificationStorage verificationStorage;
     private final S3Service s3Service;
+    private final SendRandomPasswordService sendRandomPasswordService;
 
     @Transactional(readOnly = true)
     public void checkEmailDuplicated(String email) {
@@ -71,6 +73,15 @@ public class MemberService {
 
     public void deleteMember(Member member) {
         member.delete();
+        memberRepository.save(member);
+    }
+
+    public void findPassword(FindPasswordRequest request) {
+        Member member = memberRepository.findByEmailAndIsDeletedFalse(request.email())
+            .orElseThrow(() -> new AivleException(INVALID_REQUEST));
+
+        String newPassword = member.resetPassword();
+        sendRandomPasswordService.send(member.getEmail(), newPassword);
         memberRepository.save(member);
     }
 }

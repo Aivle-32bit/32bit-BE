@@ -3,6 +3,7 @@ package com.aivle.bit.global.smtp;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_APPROVE;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_DORMANT;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_NOTICE;
+import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_RANDOM_PASSWORD;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_REJECT;
 import static com.aivle.bit.global.smtp.HtmlEmailTemplate.MailType.EMAIL_VERIFICATION;
 
@@ -50,5 +51,11 @@ public class Mail {
         return new Mail(to,
             EMAIL_NOTICE.subject(),
             EMAIL_NOTICE.content(content));
+    }
+
+    public static Mail randomPassword(String email, String password) {
+        return new Mail(email,
+            EMAIL_RANDOM_PASSWORD.subject(),
+            EMAIL_RANDOM_PASSWORD.content(password));
     }
 }

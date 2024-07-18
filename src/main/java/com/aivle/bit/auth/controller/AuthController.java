@@ -5,6 +5,7 @@ import com.aivle.bit.auth.dto.response.TokenResponse;
 import com.aivle.bit.auth.service.SignInService;
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.dto.request.EmailVerificationRequest;
+import com.aivle.bit.member.dto.request.FindPasswordRequest;
 import com.aivle.bit.member.dto.request.MemberCreateRequest;
 import com.aivle.bit.member.dto.request.MemberVerificationRequest;
 import com.aivle.bit.member.dto.response.MemberCreateResponse;
@@ -70,5 +71,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(HttpServletResponse response) {
         TokenResponse.expireAccessToken(response);
+    }
+
+    // 비밀번호 찾기
+    @PostMapping("/find-password")
+    @ResponseStatus(HttpStatus.OK)
+    public void findPassword(@RequestBody @Valid FindPasswordRequest request) {
+        memberService.findPassword(request);
     }
 }
