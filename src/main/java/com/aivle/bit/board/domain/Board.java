@@ -1,6 +1,7 @@
 package com.aivle.bit.board.domain;
 
 import static com.aivle.bit.global.exception.ErrorCode.BOARD_AUTHOR_ONLY_EXCEPTION;
+import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
 
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
@@ -105,8 +106,12 @@ public class Board extends BaseTimeEntity {
         boolean isSecret = this.isSecret;
         boolean isAdmin = this.member.getIsAdmin();
 
-        if ((!isSameMember && !isSecret) || !isAdmin) {
-            throw new AivleException(BOARD_AUTHOR_ONLY_EXCEPTION);
+        if (!isSecret) {
+            return;
+        }
+
+        if (isSameMember || !isAdmin) {
+            throw new AivleException(POST_FORBIDDEN);
         }
     }
 
