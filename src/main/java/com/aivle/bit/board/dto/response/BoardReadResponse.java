@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardReadResponse {
 
     private Long boardId;
+    private Long parentId;
     private String title;
     private String content;
     private int viewCount;
@@ -18,10 +19,11 @@ public class BoardReadResponse {
     private Boolean isSecret;
     private LocalDateTime createdAt;
 
-    public BoardReadResponse(final Long boardId, final String title, final String content,
+    public BoardReadResponse(final Long boardId, final Long parentId, final String title, final String content,
                              final int viewCount, final Long memberId, final String memberName, final Boolean isSecret,
                              final LocalDateTime createdAt) {
         this.boardId = boardId;
+        this.parentId = parentId;
         this.title = title;
         this.content = content;
         this.viewCount = viewCount;
@@ -34,6 +36,7 @@ public class BoardReadResponse {
     public static BoardReadResponse from(final Board board) {
         return new BoardReadResponse(
             board.getId(),
+            board.getParentId(),
             board.getTitle(),
             board.getContent(),
             board.getViewCount(),
