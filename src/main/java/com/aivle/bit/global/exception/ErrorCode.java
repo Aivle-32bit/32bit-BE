@@ -46,6 +46,8 @@ public enum ErrorCode {
     ALREADY_REGISTERED_COMPANY(BAD_REQUEST, "이미 등록된 회사입니다."),
     INVALID_METRICS(BAD_REQUEST, "유효하지 않은 지표입니다."),
     NOT_SUPPORT_API(BAD_REQUEST, "지원하지 않는 API입니다."),
+    NO_COMPANY(BAD_REQUEST, "검색 결과가 없습니다."),
+    UNSUPPORTED_OPERATION(BAD_REQUEST, "지원되지 않는 작업입니다."),
     NOT_FOUND_MEMBER(BAD_REQUEST, "회원을 찾을 수 없습니다."),
     INVALID_REPLY_REQUEST(BAD_REQUEST, "잘못된 답글 요청입니다."),
 

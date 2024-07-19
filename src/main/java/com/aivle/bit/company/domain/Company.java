@@ -8,11 +8,15 @@ import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
+@Setter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class Company {
 
     @Id
@@ -35,6 +39,7 @@ public class Company {
     @Comment("True-삭제, False-삭제 아님")
     private boolean isDeleted;
 
+
     private Company(String name, String businessType) {
         this.name = name;
         this.businessType = businessType;
@@ -48,4 +53,5 @@ public class Company {
     public void delete() {
         this.isDeleted = true;
     }
+
 }
