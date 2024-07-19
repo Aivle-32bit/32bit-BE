@@ -1,6 +1,8 @@
 package com.aivle.bit.board.domain;
 
 import static com.aivle.bit.global.exception.ErrorCode.BOARD_AUTHOR_ONLY_EXCEPTION;
+import static com.aivle.bit.global.exception.ErrorCode.INVALID_REPLY_REQUEST;
+import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
 
 import com.aivle.bit.global.domain.BaseTimeEntity;
 import com.aivle.bit.global.exception.AivleException;
@@ -19,8 +21,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
@@ -62,15 +62,8 @@ public class Board extends BaseTimeEntity {
     @Comment("조회수")
     private int viewCount;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
-
     private Board(String title, String content, Member member, Long parentId, Boolean isDeleted,
-                  Boolean isSecret, int viewCount, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+                  Boolean isSecret, int viewCount) {
         this.title = title;
         this.content = content;
         this.member = member;
@@ -78,12 +71,18 @@ public class Board extends BaseTimeEntity {
         this.isDeleted = isDeleted;
         this.isSecret = isSecret;
         this.viewCount = viewCount;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
     }
 
     public static Board create(String title, String content, Member member, Boolean isSecret) {
-        return new Board(title, content, member, null, false, isSecret, 0, LocalDateTime.now(), LocalDateTime.now());
+        return new Board(title, content, member, null, false, isSecret, 0);
+    }
+
+    public static Board reply(String content, Member member, Board parentBoard) {
+        Boolean isSecret = parentBoard.isSecret;
+        if (parentBoard.parentId != null) {
+            throw new AivleException(INVALID_REPLY_REQUEST);
+        }
+        return new Board("답글", content, member, parentBoard.getId(), false, isSecret, 0);
     }
 
     public void update(String title, String content, Boolean isSecret) {
@@ -95,14 +94,37 @@ public class Board extends BaseTimeEntity {
 
 
     public void isAuthor(Member member) {
+        boolean isAdmin = member.getIsAdmin();
+
+        if (isAdmin) {
+            return;
+        }
+
         if (!this.member.getId().equals(member.getId())) {
             throw new AivleException(BOARD_AUTHOR_ONLY_EXCEPTION);
         }
     }
 
-    public boolean canView(Member member) {
-        return !this.isSecret || this.member.equals(member);
+    public void canView(Member member) {
+        boolean isSameMember = this.member.getId().equals(member.getId());
+        boolean isSecret = this.isSecret;
+        boolean isAdmin = member.getIsAdmin();
+
+        if (!isSecret) {
+            return;
+        }
+
+        if (isAdmin) {
+            return;
+        }
+
+        if (isSameMember) {
+            return;
+        }
+
+        throw new AivleException(POST_FORBIDDEN);
     }
+
 
     public boolean isDeleted() {
         return this.isDeleted;

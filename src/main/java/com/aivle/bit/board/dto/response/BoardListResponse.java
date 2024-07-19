@@ -1,13 +1,14 @@
 package com.aivle.bit.board.dto.response;
 
 import com.aivle.bit.board.domain.Board;
+import com.aivle.bit.member.domain.Member;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class BoardReadResponse {
+public class BoardListResponse {
 
     private Long boardId;
     private Long parentId;
@@ -19,7 +20,7 @@ public class BoardReadResponse {
     private Boolean isSecret;
     private LocalDateTime createdAt;
 
-    public BoardReadResponse(final Long boardId, final Long parentId, final String title, final String content,
+    public BoardListResponse(final Long boardId, final Long parentId, final String title, final String content,
                              final int viewCount, final Long memberId, final String memberName, final Boolean isSecret,
                              final LocalDateTime createdAt) {
         this.boardId = boardId;
@@ -33,8 +34,8 @@ public class BoardReadResponse {
         this.createdAt = createdAt;
     }
 
-    public static BoardReadResponse from(final Board board) {
-        return new BoardReadResponse(
+    public static BoardListResponse from(final Board board) {
+        return new BoardListResponse(
             board.getId(),
             board.getParentId(),
             board.getTitle(),

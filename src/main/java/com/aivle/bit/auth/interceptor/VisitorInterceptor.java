@@ -16,12 +16,9 @@ public class VisitorInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
         throws Exception {
-        if (isNoticePath(request)) {
-            return true;
-        }
+
         String sessionId = request.getSession().getId();
         visitorService.recordVisit(sessionId);
         return true;
     }
-    private boolean isNoticePath(HttpServletRequest request) { return request.getRequestURI().startsWith("/API/notice"); }
 }

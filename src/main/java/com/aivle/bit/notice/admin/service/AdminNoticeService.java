@@ -2,7 +2,6 @@ package com.aivle.bit.notice.admin.service;
 
 import static com.aivle.bit.global.exception.ErrorCode.POST_FORBIDDEN;
 import static com.aivle.bit.global.exception.ErrorCode.POST_NOT_FOUND;
-import static com.aivle.bit.global.utils.ValidationUtil.validateTitleAndContent;
 
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.member.domain.Member;
@@ -27,7 +26,6 @@ public class AdminNoticeService {
     @Transactional
     public NoticeReadResponse createNotice(Member member, NoticeCreateRequest noticeCreateRequest) {
         validateAdmin(member);
-        validateTitleAndContent(noticeCreateRequest.title(), noticeCreateRequest.content());
         Notice notice = Notice.create(noticeCreateRequest.title(), noticeCreateRequest.content(), member);
         notice = noticeRepository.save(notice);
         return NoticeReadResponse.fromForCreate(notice);
@@ -36,7 +34,6 @@ public class AdminNoticeService {
     @Transactional
     public NoticeReadResponse updateNotice(Member member, Long noticeId, NoticeUpdateRequest noticeUpdateRequest) {
         validateAdmin(member);
-        validateTitleAndContent(noticeUpdateRequest.title(), noticeUpdateRequest.content());
         Notice notice = findNoticeForUpdate(noticeId);
         notice.update(noticeUpdateRequest.title(), noticeUpdateRequest.content());
         notice = noticeRepository.save(notice);

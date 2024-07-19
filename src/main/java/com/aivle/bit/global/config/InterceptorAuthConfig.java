@@ -38,7 +38,7 @@ public class InterceptorAuthConfig implements WebMvcConfigurer {
         registry.addInterceptor(memberInterceptor)
             .order(1)
             .addPathPatterns("/**")
-            .excludePathPatterns("/", "/error", "/api/auth/**");
+            .excludePathPatterns("/", "/error", "/api/auth/**", "/api/notice");
 
         registry.addInterceptor(adminInterceptor)
             .order(2)

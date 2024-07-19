@@ -89,7 +89,7 @@ class HtmlEmailTemplate {
             </tr>
             """),
 
-        EMAIL_NOTICE("[재무탐정] 공지사항","""
+        EMAIL_NOTICE("[재무탐정] 공지사항", """
             <tr>
               <td style="padding-top: 20px;">
                 <h1 style="font-size: 24px; color: #333333; margin: 0;">공지사항</h1>
@@ -98,6 +98,19 @@ class HtmlEmailTemplate {
             <tr>
               <td style="padding-top: 10px; padding-bottom: 20px;">
                 <p style="font-size: 16px; color: #333333;">%s</p>
+              </td>
+            </tr>
+            """),
+        EMAIL_RANDOM_PASSWORD("[재무탐정] 임시 비밀번호 발급 안내", """
+            <tr>
+              <td style="padding-top: 20px;">
+                <h1 style="font-size: 24px; color: #333333; margin: 0;">임시 비밀번호 발급 안내</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 10px; padding-bottom: 20px;">
+                <p style="font-size: 16px; color: #333333;">귀하의 임시 비밀번호는 다음과 같습니다:</p>
+                <p style="font-size: 24px; color: #f76c5e; font-weight: bold;">%s</p>
               </td>
             </tr>
             """);
@@ -116,7 +129,7 @@ class HtmlEmailTemplate {
         public String subject() {
             return subject;
         }
-    }
+        }
 
     private HtmlEmailTemplate() {
     }

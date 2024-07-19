@@ -1,16 +1,20 @@
 package com.aivle.bit.board.controller;
 
 
+import com.aivle.bit.auth.jwt.Admin;
 import com.aivle.bit.auth.jwt.JwtLogin;
 import com.aivle.bit.board.domain.Board;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
 import com.aivle.bit.board.dto.request.BoardUpdateRequest;
+import com.aivle.bit.board.dto.request.ReplyCreateRequest;
+import com.aivle.bit.board.dto.response.BoardListResponse;
 import com.aivle.bit.board.dto.response.BoardReadResponse;
 import com.aivle.bit.board.service.BoardService;
 import com.aivle.bit.member.domain.Member;
-import java.util.List;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,9 +40,9 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BoardReadResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest,
-    @JwtLogin Member member) {
+                                         @JwtLogin Member member) {
         Board board = boardService.createBoard(member, boardCreateRequest);
-        return BoardReadResponse.from(board, member);
+        return BoardReadResponse.from(board);
     }
 
     @Comment("게시글 수정")
@@ -47,7 +51,7 @@ public class BoardController {
     public BoardReadResponse updateBoard(@JwtLogin Member member, @PathVariable Long boardId,
                                          @RequestBody BoardUpdateRequest boardUpdateRequest) {
         Board updatedBoard = boardService.updateBoard(member, boardId, boardUpdateRequest);
-        return BoardReadResponse.from(updatedBoard, member);
+        return BoardReadResponse.from(updatedBoard);
     }
 
     @Comment("게시글 삭제")
@@ -62,28 +66,38 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public BoardReadResponse findBoard(@PathVariable Long boardId, @JwtLogin Member member) {
         Board board = boardService.findBoardForUpdate(boardId, member);
-        return BoardReadResponse.from(board, member);
+        return BoardReadResponse.from(board);
     }
 
     @Comment("글 목록")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadResponse> findAll(Pageable pageable) {
+    public Page<BoardListResponse> findAll(Pageable pageable) {
         return boardService.findAll(pageable);
     }
 
     @Comment("제목으로 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadResponse> findBoardByTitle(@RequestParam String title) {
-        return boardService.findBoardByTitle(title);
+    public Page<BoardListResponse> findBoardByTitle(@RequestParam @NotEmpty(message = "검색어가 비어있습니다.") String title,
+                                                    Pageable pageable) {
+        return boardService.findBoardByTitle(title, pageable);
     }
 
     @Comment("내가 쓴 게시글 조회")
     @GetMapping("/my_boards")
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadResponse> findMyBoard(@JwtLogin Member member) {
-        return boardService.findMyBoard(member);
+    public Page<BoardListResponse> findMyBoard(@JwtLogin Member member, Pageable pageable) {
+        return boardService.findMyBoard(member, pageable);
+    }
+
+    @Comment("게시글 답글 작성")
+    @PostMapping("/{boardId}/reply")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BoardReadResponse createReply(@PathVariable Long boardId, @RequestBody ReplyCreateRequest replyCreateRequest,
+                                         @Admin Member member) {
+        Board board = boardService.createReply(boardId, member, replyCreateRequest);
+        return BoardReadResponse.from(board);
     }
 
 }

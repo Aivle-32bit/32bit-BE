@@ -1,5 +1,7 @@
 package com.aivle.bit.auth.controller;
 
+import com.aivle.bit.auth.dto.request.FindEmailRequest;
+import com.aivle.bit.auth.dto.request.FindPasswordRequest;
 import com.aivle.bit.auth.dto.request.SignInRequest;
 import com.aivle.bit.auth.dto.response.TokenResponse;
 import com.aivle.bit.auth.service.SignInService;
@@ -16,6 +18,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,5 +74,17 @@ public class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(HttpServletResponse response) {
         TokenResponse.expireAccessToken(response);
+    }
+
+    @PostMapping("/find-password")
+    @ResponseStatus(HttpStatus.OK)
+    public void findPassword(@RequestBody @Valid FindPasswordRequest request) {
+        memberService.findPassword(request);
+    }
+
+    @GetMapping("/find-email")
+    @ResponseStatus(HttpStatus.OK)
+    public String findEmail(@ModelAttribute @Valid FindEmailRequest request) {
+        return memberService.findEmail(request);
     }
 }

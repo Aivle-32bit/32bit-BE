@@ -32,7 +32,7 @@ public class LoginRecord {
     @Comment("로그인 시각")
     private Date loginTime;
 
-    @Column(nullable = false)
+    @Column
     @Comment("로그인 시도한 IP 주소")
     private String ipAddress;
 

@@ -3,6 +3,7 @@ package com.aivle.bit.company.service;
 import static com.aivle.bit.global.exception.ErrorCode.INVALID_METRICS;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_COMPANY;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_COMPANY_REGISTRATION;
+import static java.lang.Math.abs;
 
 import com.aivle.bit.company.domain.Company;
 import com.aivle.bit.company.domain.FinancialSummary;
@@ -82,7 +83,7 @@ public class CompanyReportService {
     }
 
     private String calculateStatus(double currentValue, double previousValue) {
-        double changePercentage = ((currentValue - previousValue) / previousValue) * 100;
+        double changePercentage = ((currentValue - previousValue) / abs(previousValue)) * 100;
         if (changePercentage > 5) {
             return "GOOD";
         } else if (changePercentage < -5) {

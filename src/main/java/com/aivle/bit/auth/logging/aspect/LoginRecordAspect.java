@@ -45,15 +45,14 @@ public class LoginRecordAspect {
 
     @AfterThrowing(pointcut = "signInPointcut(signInRequest)", throwing = "ex", argNames = "signInRequest,ex")
     public void logLoginFailure(SignInRequest signInRequest, Exception ex) {
-        String ipAddress = getRealIpAddress(request);
-        log.info("[Login Log] {} 로그인 실패", ipAddress);
+        log.info("[Login Log] 로그인 실패");
         String userAgent = request.getHeader("User-Agent");
         Long userId = memberRepository.findByEmailAndIsDeletedFalse(signInRequest.email())
             .map(Member::getId)
             .orElse(null);
         boolean success = false;
 
-        loginRecordService.logLoginAttempt(ipAddress, userAgent, userId, success);
+        loginRecordService.logLoginAttempt(null, userAgent, userId, success);
     }
 
     private Long extractUserIdFromToken(String token) {
