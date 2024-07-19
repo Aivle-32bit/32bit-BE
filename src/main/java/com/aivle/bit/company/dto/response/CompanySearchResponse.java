@@ -1,21 +1,13 @@
 package com.aivle.bit.company.dto.response;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
+@Data
+@AllArgsConstructor
 public class CompanySearchResponse {
 
-    private final Long companyId;
-    private final String companyName;
-    private final String businessType;
-
-    private CompanySearchResponse(Long companyId, String companyName, String businessType) {
-        this.companyId = companyId;
-        this.companyName = companyName;
-        this.businessType = businessType;
-    }
-
-    public static CompanySearchResponse of(Long companyId, String companyName, String businessType) {
-        return new CompanySearchResponse(companyId, companyName, businessType);
-    }
+    private Long id;
+    private String name;
+    private String businessType;
 }
