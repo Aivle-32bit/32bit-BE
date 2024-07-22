@@ -45,11 +45,17 @@ public enum ErrorCode {
     INVALID_MEMBER_STATE(BAD_REQUEST, "유효하지 않은 회원 상태입니다."),
     ALREADY_REGISTERED_COMPANY(BAD_REQUEST, "이미 등록된 회사입니다."),
     INVALID_METRICS(BAD_REQUEST, "유효하지 않은 지표입니다."),
-    NOT_SUPPORT_API(BAD_REQUEST, "지원하지 않는 API입니다."),
+    NOT_SUPPORT_API(BAD_REQUEST, "지원하지 않는 API 입니다."),
     NO_COMPANY(BAD_REQUEST, "검색 결과가 없습니다."),
     UNSUPPORTED_OPERATION(BAD_REQUEST, "지원되지 않는 작업입니다."),
     NOT_FOUND_MEMBER(BAD_REQUEST, "회원을 찾을 수 없습니다."),
     INVALID_REPLY_REQUEST(BAD_REQUEST, "잘못된 답글 요청입니다."),
+    NO_COMPANY_WITH_ID(BAD_REQUEST,"해당 ID를 가진 회사가 없습니다."),
+    SAVE_IMG_ERROR(BAD_REQUEST,"이미지 저장 중 오류가 발생했습니다."),
+    EMPTY_IMG_FILE(BAD_REQUEST,"이미지 파일을 업로드해주세요."),
+    IMAGE_SIZE_EXCEEDED(BAD_REQUEST, "이미지 파일 크기가 1MB를 초과했습니다."),
+    INVALID_COMPANY_NAME(BAD_REQUEST, "회사 명을 입력해주세요."),
+    INVALID_BUSINESSTYPE(BAD_REQUEST, "사업 종류를 입력해주세요."),
 
     // 401 Unauthorized
     INVALID_TOKEN_EXTRACTOR(UNAUTHORIZED, "토큰 추출에 실패했습니다."),

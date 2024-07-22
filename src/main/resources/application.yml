@@ -5,6 +5,11 @@ spring:
       - datasource
       - secret
       - s3
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 1MB
+
   jpa:
     hibernate:
       ddl-auto: update
