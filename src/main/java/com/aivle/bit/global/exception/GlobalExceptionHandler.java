@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Slf4j
 @RestControllerAdvice
@@ -55,4 +56,17 @@ public class GlobalExceptionHandler {
         return ErrorResponse.from(SERVER_ERROR);
     }
 
+    @ExceptionHandler(ImageSizeExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleImageSizeExceededException(ImageSizeExceededException exception) {
+        log.warn("ImageSizeExceededException: {}", exception.getMessage());
+        return ErrorResponse.from(ErrorCode.IMAGE_SIZE_EXCEEDED);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMaxUploadSizeExceededException(MaxUploadSizeExceededException exception) {
+        log.warn("MaxUploadSizeExceededException: {}", exception.getMessage());
+        return ErrorResponse.from(ErrorCode.FILE_SIZE_EXCEEDED);
+    }
 }

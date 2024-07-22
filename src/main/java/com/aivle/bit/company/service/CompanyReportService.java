@@ -97,7 +97,7 @@ public class CompanyReportService {
                                                              FinancialSummary previousYearSummary) {
         return CompanyReportResponse.of(
             company.getName(),
-            company.getImage_url(),
+            company.getImageUrl(),
             calculateStatus(currentYearSummary.getSalesAmount(), previousYearSummary.getSalesAmount()),
             calculateStatus(currentYearSummary.getNetIncome(), previousYearSummary.getNetIncome()),
             calculateStatus(currentYearSummary.getTotalAssets(), previousYearSummary.getTotalAssets()),

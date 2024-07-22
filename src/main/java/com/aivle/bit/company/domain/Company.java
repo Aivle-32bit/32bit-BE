@@ -33,14 +33,14 @@ public class Company {
 
     @Comment("회사 이미지 URL")
     @Column
-    private String image_url;
+    private String imageUrl;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     @Comment("True-삭제, False-삭제 아님")
     private boolean isDeleted;
 
 
-    private Company(String name, String businessType) {
+    public Company(String name, String businessType) {
         this.name = name;
         this.businessType = businessType;
         this.isDeleted = false;

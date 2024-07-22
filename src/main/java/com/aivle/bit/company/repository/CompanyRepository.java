@@ -17,4 +17,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long>, JpaSpec
 
     Optional<Company> findByNameAndIsDeletedFalse(String companyName);
 
+    Optional<Company> findByName(String name);
 }
