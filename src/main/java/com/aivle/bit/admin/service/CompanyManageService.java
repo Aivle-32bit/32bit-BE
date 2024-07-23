@@ -1,7 +1,5 @@
 package com.aivle.bit.admin.service;
 
-import static com.aivle.bit.global.exception.ErrorCode.INVALID_CSV_COLUMN;
-import static com.aivle.bit.global.exception.ErrorCode.INVALID_REQUEST;
 import static com.aivle.bit.global.exception.ErrorCode.NOT_CSV_FILE;
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_COMPANY;
 import static com.aivle.bit.global.exception.ErrorCode.OVER_MAX_FILE_SIZE;
@@ -23,9 +21,13 @@ import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.repository.MemberRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,11 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -111,31 +111,23 @@ public class CompanyManageService {
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new AivleException(OVER_MAX_FILE_SIZE);
         }
-
-        try (CSVParser parser = new CSVParser(new InputStreamReader(file.getInputStream()),
-            CSVFormat.DEFAULT.withFirstRecordAsHeader())) {
-            Set<String> headerSet = parser.getHeaderMap().keySet();
-
-            for (String requiredColumn : REQUIRED_COLUMNS) {
-                if (!headerSet.contains(requiredColumn)) {
-                    throw new AivleException(INVALID_CSV_COLUMN);
-                }
-            }
-        } catch (IOException e) {
-            throw new AivleException(SERVER_ERROR);
-        }
     }
 
     private Map<String, Object> parseCsvFile(MultipartFile file, Company company) {
         Map<String, Object> data = new HashMap<>();
-        try (CSVParser parser = new CSVParser(new InputStreamReader(file.getInputStream()),
-            CSVFormat.DEFAULT.withFirstRecordAsHeader())) {
-            for (CSVRecord record : parser) {
-                for (String column : REQUIRED_COLUMNS) {
-                    data.put(column, Double.parseDouble(record.get(column)));
+        try (CSVReader reader = new CSVReaderBuilder(
+            new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))
+            .withSkipLines(1) // 헤더 라인을 스킵
+            .build()) {
+
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                for (int i = 0; i < REQUIRED_COLUMNS.size(); i++) {
+                    String column = REQUIRED_COLUMNS.get(i);
+                    data.put(column, Double.parseDouble(nextLine[i]));
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | CsvValidationException e) {
             throw new AivleException(SERVER_ERROR);
         }
         Map<String, Object> requestData = new HashMap<>();
@@ -146,7 +138,8 @@ public class CompanyManageService {
 
     private String sendToFlaskAPI(Map<String, Object> data) {
         String jsonData = new Gson().toJson(data);
-
+        jsonData = convertScientificNotation(jsonData);
+        System.out.println("jsonData = " + jsonData);
         return webClient.post()
             .uri(API_SERVER)
             .header("Content-Type", "application/json")
@@ -287,4 +280,23 @@ public class CompanyManageService {
             throw new AivleException(ErrorCode.SAVE_IMG_ERROR);
         }
     }
+
+    public static String convertScientificNotation(String input) {
+        Pattern pattern = Pattern.compile("([0-9\\.]+)E(\\d+)");
+        Matcher matcher = pattern.matcher(input);
+
+        StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            String number = matcher.group(1);
+            int exponent = Integer.parseInt(matcher.group(2));
+            String replacement = String.format("%." + exponent + "f",
+                Double.parseDouble(number) * Math.pow(10, exponent));
+            matcher.appendReplacement(sb,
+                replacement.replaceAll("\\.0+$", ""));  // Removes trailing zeros after the decimal point
+        }
+        matcher.appendTail(sb);
+
+        return sb.toString();
+    }
+
 }
