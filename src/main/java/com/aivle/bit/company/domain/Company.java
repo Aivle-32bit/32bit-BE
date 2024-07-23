@@ -23,7 +23,7 @@ public class Company {
     private Long id;
 
     @Comment("회사명")
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Comment("사업분야")
