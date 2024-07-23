@@ -113,7 +113,8 @@ public class MemberManageService {
     private Company createAndSaveCompany(CompanyRegistration registration) {
         return companyRepository.findByNameAndIsDeletedFalse(registration.getCompanyName())
             .orElseGet(() -> companyRepository.save(
-                Company.of(registration.getCompanyName(), registration.getBusinessType())));
+                Company.of(registration.getCompanyName(), registration.getBusinessType(),
+                    registration.getImageUri())));
     }
 
     private void updateMemberWithCompany(Long memberId, Company company) {
