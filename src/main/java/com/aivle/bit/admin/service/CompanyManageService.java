@@ -19,6 +19,7 @@ import com.aivle.bit.company.repository.MetricsSummaryRepository;
 import com.aivle.bit.company.repository.SwotRepository;
 import com.aivle.bit.global.exception.AivleException;
 import com.aivle.bit.global.exception.ErrorCode;
+import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.member.repository.MemberRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -80,9 +81,14 @@ public class CompanyManageService {
             () -> new AivleException(NO_SEARCH_COMPANY)
         );
         company.delete();
-        memberRepository.findByCompanyId(id).orElseThrow(
-            () -> new AivleException(INVALID_REQUEST)
-        ).updateCompany(null);
+
+        List<Member> members = memberRepository.findByCompanyId(id);
+        if (members != null && !members.isEmpty()) {
+            for (Member member : members) {
+                member.updateCompany(null);
+                memberRepository.save(member);
+            }
+        }
     }
 
     @Transactional
