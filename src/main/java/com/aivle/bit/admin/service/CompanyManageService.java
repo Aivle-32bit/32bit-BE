@@ -89,6 +89,7 @@ public class CompanyManageService {
                 memberRepository.save(member);
             }
         }
+        companyRepository.save(company);
     }
 
     @Transactional
