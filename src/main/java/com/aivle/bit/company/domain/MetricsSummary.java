@@ -54,4 +54,8 @@ public class MetricsSummary {
     public static MetricsSummary of(Metrics metrics, String summary, Company company, int year) {
         return new MetricsSummary(metrics, summary, company, year);
     }
+
+    public void updateValue(String value) {
+        this.summary = value;
+    }
 }
