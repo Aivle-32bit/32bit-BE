@@ -139,7 +139,6 @@ public class CompanyManageService {
     private String sendToFlaskAPI(Map<String, Object> data) {
         String jsonData = new Gson().toJson(data);
         jsonData = convertScientificNotation(jsonData);
-        System.out.println("jsonData = " + jsonData);
         return webClient.post()
             .uri(API_SERVER)
             .header("Content-Type", "application/json")
