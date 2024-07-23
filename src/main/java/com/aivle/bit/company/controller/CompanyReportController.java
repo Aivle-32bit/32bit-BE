@@ -6,7 +6,7 @@ import com.aivle.bit.company.dto.response.CompanyInfoResponse;
 import com.aivle.bit.company.dto.response.CompanyReportResponse;
 import com.aivle.bit.company.dto.response.MetricsResponse;
 import com.aivle.bit.company.dto.response.SwotResponse;
-import com.aivle.bit.company.service.CompanyInfoService;
+import com.aivle.bit.admin.service.CompanyInfoService;
 import com.aivle.bit.company.service.CompanyReportService;
 import com.aivle.bit.company.service.SwotService;
 import com.aivle.bit.member.domain.Member;
