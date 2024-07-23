@@ -15,4 +15,6 @@ public interface FinancialSummaryRepository extends JpaRepository<FinancialSumma
     void deleteByCompanyAndYear(Company company, int currentYear);
 
     Optional<FinancialSummary> findByCompanyAndYear(Company company, int year);
+
+    List<FinancialSummary> findByCompany(Company company);
 }
