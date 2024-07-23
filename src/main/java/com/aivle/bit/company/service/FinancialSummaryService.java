@@ -1,4 +1,4 @@
-package com.aivle.bit.company.controller;
+package com.aivle.bit.company.service;
 
 import static com.aivle.bit.global.exception.ErrorCode.NO_SEARCH_COMPANY_REGISTRATION;
 
