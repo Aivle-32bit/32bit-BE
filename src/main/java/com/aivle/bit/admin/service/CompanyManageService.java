@@ -262,7 +262,7 @@ public class CompanyManageService {
 
     @Transactional
     public Company addCompany(String name, String businessType, MultipartFile image) {
-        companyRepository.findByName(name).ifPresent(c -> {
+        companyRepository.findByNameAndIsDeletedFalse(name).ifPresent(c -> {
             throw new AivleException(ErrorCode.ALREADY_REGISTERED_COMPANY);
         });
 
