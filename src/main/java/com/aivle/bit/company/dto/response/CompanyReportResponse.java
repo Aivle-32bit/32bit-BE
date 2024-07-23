@@ -1,5 +1,6 @@
 package com.aivle.bit.company.dto.response;
 
+import java.util.function.Function;
 import lombok.Getter;
 
 @Getter
@@ -53,8 +54,8 @@ public class CompanyReportResponse {
                                            final double DEBT, final double ATR, final double ROA, final double AGR,
                                            final double PPE, final double previousDEBT, final double previousATR,
                                            final double previousROA, final double previousAGR,
-                                           final double previousPPE) {
-        return new CompanyReportResponse(companyName, companyImage, salesAmountStatus, netIncomeStatus,
+                                           final double previousPPE, Function<String, String> urlGenerator) {
+        return new CompanyReportResponse(companyName, urlGenerator.apply(companyImage), salesAmountStatus, netIncomeStatus,
             totalAssetStatus, totalLiabilityStatus, DEBT, ATR, ROA, AGR, PPE, previousDEBT, previousATR,
             previousROA, previousAGR, previousPPE);
     }

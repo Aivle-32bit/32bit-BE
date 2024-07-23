@@ -17,11 +17,10 @@ import com.aivle.bit.company.repository.FinancialSummaryRepository;
 import com.aivle.bit.company.repository.MetricsSummaryRepository;
 import com.aivle.bit.global.exception.AivleException;
 import java.time.LocalDate;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ public class CompanyReportService {
     private final CompanyRepository companyRepository;
     private final FinancialSummaryRepository financialSummaryRepository;
     private final MetricsSummaryRepository metricsSummaryRepository;
+    private final S3Service s3Service;
 
     public CompanyReportResponse getCompanyReport(Long companyId) {
         Company company = getCompanyById(companyId);
@@ -111,7 +111,8 @@ public class CompanyReportService {
             previousYearSummary.getATR(),
             previousYearSummary.getROA(),
             previousYearSummary.getAGR(),
-            previousYearSummary.getPPE()
+            previousYearSummary.getPPE(),
+            s3Service::generatePresignedUrl
         );
     }
 }
