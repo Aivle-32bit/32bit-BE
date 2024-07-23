@@ -18,12 +18,16 @@ import com.aivle.bit.company.repository.FinancialSummaryRepository;
 import com.aivle.bit.company.repository.MetricsSummaryRepository;
 import com.aivle.bit.company.repository.SwotRepository;
 import com.aivle.bit.global.exception.AivleException;
+import com.aivle.bit.global.exception.ErrorCode;
 import com.aivle.bit.member.repository.MemberRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -246,6 +250,34 @@ public class CompanyManageService {
                     description)
                 .orElse(Swot.of(year, company, category, description));
             swotRepository.save(swot);
+        }
+    }
+
+    @Transactional
+    public Company addCompany(String name, String businessType, MultipartFile image) {
+        companyRepository.findByName(name).ifPresent(c -> {
+            throw new AivleException(ErrorCode.ALREADY_REGISTERED_COMPANY);
+        });
+
+        String imageUrl = saveImage(image);
+        Company company = Company.of(name, businessType, imageUrl);
+        return companyRepository.save(company);
+    }
+
+    private String saveImage(MultipartFile image) {
+
+        if (image.getSize() > MAX_FILE_SIZE) {
+            throw new AivleException(ErrorCode.IMAGE_SIZE_EXCEEDED);
+        }
+
+        try {
+            byte[] bytes = image.getBytes();
+            Path path = Paths.get("images/" + image.getOriginalFilename());
+            Files.createDirectories(path.getParent());
+            Files.write(path, bytes);
+            return path.toString();
+        } catch (IOException e) {
+            throw new AivleException(ErrorCode.SAVE_IMG_ERROR);
         }
     }
 }
