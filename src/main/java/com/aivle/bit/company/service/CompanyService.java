@@ -22,25 +22,12 @@ public class CompanyService {
 
     @Transactional
     public Company addCompany(String name, String businessType, MultipartFile image) {
-        if (name == null || name.isBlank()) {
-            throw new AivleException(ErrorCode.INVALID_COMPANY_NAME);
-        }
-        if (businessType == null || businessType.isBlank()) {
-            throw new AivleException(ErrorCode.INVALID_BUSINESSTYPE);
-        }
-        if (image == null || image.isEmpty()) {
-            throw new AivleException(ErrorCode.EMPTY_IMG_FILE);
-        }
-
         companyRepository.findByName(name).ifPresent(c -> {
             throw new AivleException(ErrorCode.ALREADY_REGISTERED_COMPANY);
         });
 
         String imageUrl = saveImage(image);
-        Company company = Company.of(name, businessType);
-        company.setImageUrl(imageUrl);
-        company.setDeleted(false);
-
+        Company company = Company.of(name, businessType, imageUrl);
         return companyRepository.save(company);
     }
 
@@ -53,9 +40,6 @@ public class CompanyService {
     }
 
     private String saveImage(MultipartFile image) {
-        if (image.isEmpty()) {
-            throw new AivleException(ErrorCode.EMPTY_IMG_FILE);
-        }
 
         if (image.getSize() > MAX_IMAGE_SIZE) {
             throw new AivleException(ErrorCode.IMAGE_SIZE_EXCEEDED);

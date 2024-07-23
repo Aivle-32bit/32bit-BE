@@ -14,7 +14,6 @@ import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
-@Setter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Company {
@@ -40,14 +39,15 @@ public class Company {
     private boolean isDeleted;
 
 
-    public Company(String name, String businessType) {
+    private Company(String name, String businessType, String imageUrl) {
         this.name = name;
         this.businessType = businessType;
+        this.imageUrl = imageUrl;
         this.isDeleted = false;
     }
 
-    public static Company of(String name, String businessType) {
-        return new Company(name, businessType);
+    public static Company of(String name, String businessType, String imageUrl) {
+        return new Company(name, businessType, imageUrl);
     }
 
     public void delete() {
