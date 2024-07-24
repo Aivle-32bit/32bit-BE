@@ -2,6 +2,7 @@ package com.aivle.bit.board.controller;
 
 
 import com.aivle.bit.auth.jwt.Admin;
+import com.aivle.bit.auth.jwt.AllowUnverifiedUser;
 import com.aivle.bit.auth.jwt.JwtLogin;
 import com.aivle.bit.board.domain.Board;
 import com.aivle.bit.board.dto.request.BoardCreateRequest;
@@ -40,7 +41,7 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BoardReadResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest,
-                                         @JwtLogin Member member) {
+                                         @AllowUnverifiedUser Member member) {
         Board board = boardService.createBoard(member, boardCreateRequest);
         return BoardReadResponse.from(board);
     }
@@ -48,7 +49,7 @@ public class BoardController {
     @Comment("게시글 수정")
     @PutMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
-    public BoardReadResponse updateBoard(@JwtLogin Member member, @PathVariable Long boardId,
+    public BoardReadResponse updateBoard(@AllowUnverifiedUser Member member, @PathVariable Long boardId,
                                          @RequestBody BoardUpdateRequest boardUpdateRequest) {
         Board updatedBoard = boardService.updateBoard(member, boardId, boardUpdateRequest);
         return BoardReadResponse.from(updatedBoard);
@@ -57,14 +58,14 @@ public class BoardController {
     @Comment("게시글 삭제")
     @DeleteMapping("/{boardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBoard(@JwtLogin Member member, @PathVariable Long boardId) {
+    public void deleteBoard(@AllowUnverifiedUser Member member, @PathVariable Long boardId) {
         boardService.deleteBoard(member, boardId);
     }
 
     @Comment("비밀글이면 작성자가 맞는지 확인")
     @GetMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
-    public BoardReadResponse findBoard(@PathVariable Long boardId, @JwtLogin Member member) {
+    public BoardReadResponse findBoard(@PathVariable Long boardId, @AllowUnverifiedUser Member member) {
         Board board = boardService.findBoardForUpdate(boardId, member);
         return BoardReadResponse.from(board);
     }
