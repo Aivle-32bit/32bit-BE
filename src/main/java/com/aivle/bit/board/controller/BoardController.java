@@ -12,6 +12,7 @@ import com.aivle.bit.board.dto.response.BoardListResponse;
 import com.aivle.bit.board.dto.response.BoardReadResponse;
 import com.aivle.bit.board.service.BoardService;
 import com.aivle.bit.member.domain.Member;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -40,7 +41,7 @@ public class BoardController {
     @Comment("게시글 등록")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BoardReadResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest,
+    public BoardReadResponse createBoard(@RequestBody @Valid BoardCreateRequest boardCreateRequest,
                                          @AllowUnverifiedUser Member member) {
         Board board = boardService.createBoard(member, boardCreateRequest);
         return BoardReadResponse.from(board);
@@ -50,7 +51,7 @@ public class BoardController {
     @PutMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
     public BoardReadResponse updateBoard(@AllowUnverifiedUser Member member, @PathVariable Long boardId,
-                                         @RequestBody BoardUpdateRequest boardUpdateRequest) {
+                                         @RequestBody @Valid BoardUpdateRequest boardUpdateRequest) {
         Board updatedBoard = boardService.updateBoard(member, boardId, boardUpdateRequest);
         return BoardReadResponse.from(updatedBoard);
     }
@@ -95,7 +96,7 @@ public class BoardController {
     @Comment("게시글 답글 작성")
     @PostMapping("/{boardId}/reply")
     @ResponseStatus(HttpStatus.CREATED)
-    public BoardReadResponse createReply(@PathVariable Long boardId, @RequestBody ReplyCreateRequest replyCreateRequest,
+    public BoardReadResponse createReply(@PathVariable Long boardId, @RequestBody @Valid ReplyCreateRequest replyCreateRequest,
                                          @Admin Member member) {
         Board board = boardService.createReply(boardId, member, replyCreateRequest);
         return BoardReadResponse.from(board);

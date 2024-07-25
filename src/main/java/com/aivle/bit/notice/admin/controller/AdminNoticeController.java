@@ -1,11 +1,13 @@
 package com.aivle.bit.notice.admin.controller;
 
+import com.aivle.bit.auth.jwt.Admin;
 import com.aivle.bit.auth.jwt.JwtLogin;
 import com.aivle.bit.member.domain.Member;
 import com.aivle.bit.notice.admin.dto.request.NoticeCreateRequest;
 import com.aivle.bit.notice.admin.dto.request.NoticeUpdateRequest;
 import com.aivle.bit.notice.admin.dto.response.NoticeReadResponse;
 import com.aivle.bit.notice.admin.service.AdminNoticeService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -31,23 +33,23 @@ public class AdminNoticeController {
     @Comment("공지사항 등록")
     @PostMapping("/admin/notice")
     @ResponseStatus(HttpStatus.CREATED)
-    public NoticeReadResponse createNotice(@JwtLogin Member member,
-                                           @RequestBody NoticeCreateRequest noticeCreateRequest) {
+    public NoticeReadResponse createNotice(@Admin Member member,
+                                           @RequestBody @Valid NoticeCreateRequest noticeCreateRequest) {
         return noticeService.createNotice(member, noticeCreateRequest);
     }
 
     @Comment("공지사항 수정")
     @PutMapping("/admin/notice/{noticeId}")
     @ResponseStatus(HttpStatus.OK)
-    public NoticeReadResponse updateNotice(@JwtLogin Member member, @PathVariable Long noticeId,
-                                           @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
+    public NoticeReadResponse updateNotice(@Admin Member member, @PathVariable Long noticeId,
+                                           @RequestBody @Valid NoticeUpdateRequest noticeUpdateRequest) {
         return noticeService.updateNotice(member, noticeId, noticeUpdateRequest);
     }
 
     @Comment("공지사항 삭제")
     @DeleteMapping("/admin/notice/{noticeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteNotice(@JwtLogin Member member, @PathVariable Long noticeId) {
+    public void deleteNotice(@Admin Member member, @PathVariable Long noticeId) {
         noticeService.deleteNotice(member, noticeId);
     }
 
