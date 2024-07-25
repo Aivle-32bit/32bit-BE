@@ -103,12 +103,19 @@ public class BoardService {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
             .orElseThrow(() -> new AivleException(POST_NOT_FOUND));
 
-        board.canView(member);
+        Board parentBoard = null;
+        if (board.getParentId() != null) {
+            parentBoard = boardRepository.findByIdAndIsDeletedFalse(board.getParentId())
+                .orElseThrow(() -> new AivleException(POST_NOT_FOUND));
+        }
+
+        board.canView(member, parentBoard);
 
         board.incrementViewCount();
         boardRepository.save(board);
         return board;
     }
+
 
     public Board createReply(Long boardId, Member member, ReplyCreateRequest replyCreateRequest) {
         Board parentBoard = boardRepository.findByIdAndIsDeletedFalse(boardId)

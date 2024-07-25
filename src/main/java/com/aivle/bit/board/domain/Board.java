@@ -105,7 +105,7 @@ public class Board extends BaseTimeEntity {
         }
     }
 
-    public void canView(Member member) {
+    public void canView(Member member, Board parentBoard) {
         boolean isSameMember = this.member.getId().equals(member.getId());
         boolean isSecret = this.isSecret;
         boolean isAdmin = member.getIsAdmin();
@@ -119,6 +119,10 @@ public class Board extends BaseTimeEntity {
         }
 
         if (isSameMember) {
+            return;
+        }
+
+        if (parentBoard != null && parentBoard.member.getId().equals(member.getId())) {
             return;
         }
 
