@@ -43,13 +43,8 @@ public class S3Service {
     private static final List<String> ALLOWED_MIME_TYPES = List.of(
         "image/jpeg",
         "image/png",
-        "image/webp",
-        "image/bmp",
-        "image/svg+xml",
-        "image/tiff",
-        "image/vnd.microsoft.icon",
-        "image/heic",
-        "image/heif"
+        "image/gif",
+        "image/webp"
     );
 
     @Retryable(value = {SdkClientException.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000))
